@@ -11,7 +11,6 @@ import { useParams, useRouter } from "next/navigation"
 import { User } from "@prisma/client"
 
 import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import {
     Select,
@@ -70,9 +69,10 @@ const UserForm: React.FC<UserFormProps> = ({
                     description="Create or Update users"
                 />
                 <Button
+                    disabled={loading}
                     variant="destructive"
                     size="icon"
-                    onClick={() => { }}
+                    onClick={() => setOpen(true)}
                 >
                     <Trash className="h-4 w-4" />
                 </Button>
