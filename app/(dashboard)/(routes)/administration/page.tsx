@@ -5,10 +5,10 @@ import AdministratorList from '@/components/administratorlist'
 
 const AdministrationPage = async () => {
   const users = await prismadb.user.findMany()
-  console.log(users)
+  console.log(users.length)
   return (
     <div className='h-full p-14 space-y-4'>
-      <AdministratorList />
+      <AdministratorList data={users} />
     </div>
   )
 }

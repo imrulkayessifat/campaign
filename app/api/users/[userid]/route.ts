@@ -52,14 +52,13 @@ export async function PATCH(
 
 export async function DELETE(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: { userid: string } }
 ) {
     try {
         const { userId } = auth();
-
-        const user = await prismadb.user.deleteMany({
+        const user = await prismadb.user.delete({
             where: {
-                id: params.id
+                id: params.userid
             },
         })
 
