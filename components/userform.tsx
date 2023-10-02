@@ -5,7 +5,7 @@ import axios from "axios"
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { Toaster, toast } from "react-hot-toast"
+import { toast } from "react-hot-toast"
 import { Trash } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import { User } from "@prisma/client"
@@ -75,10 +75,6 @@ const UserForm: React.FC<UserFormProps> = ({
 
     return (
         <>
-            <Toaster
-                position="top-center"
-                reverseOrder={false}
-            />
             <div className="flex items-center justify-between">
                 <Heading
                     title="Users"
