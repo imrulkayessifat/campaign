@@ -48,6 +48,8 @@ interface UserFormProps {
 const UserForm: React.FC<UserFormProps> = ({
     initialdata
 }) => {
+    const params = useParams()
+    const router = useRouter()
 
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -58,7 +60,17 @@ const UserForm: React.FC<UserFormProps> = ({
     })
 
     const onSubmit = async (data: UserFormValues) => {
-        console.log(data)
+        try {
+            setLoading(true)
+            const res = await axios.post(`/api/users/`,data)
+            console.log(res)
+            router.refresh()
+            toast.success("User Created")
+        } catch (error) {
+            toast.error("Something went wrong.")
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
