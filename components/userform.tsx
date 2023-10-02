@@ -5,7 +5,7 @@ import axios from "axios"
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { toast } from "react-hot-toast"
+import { Toaster, toast } from "react-hot-toast"
 import { Trash } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import { User } from "@prisma/client"
@@ -36,7 +36,7 @@ const formSchema = z.object({
     email: z.string().email(),
     username: z.string().min(4).max(8),
     isAdmin: z.string(),
-    status:z.string()
+    status: z.string()
 });
 
 type UserFormValues = z.infer<typeof formSchema>
@@ -62,10 +62,10 @@ const UserForm: React.FC<UserFormProps> = ({
     const onSubmit = async (data: UserFormValues) => {
         try {
             setLoading(true)
-            const res = await axios.post(`/api/users/`,data)
+            const res = await axios.post(`/api/users/`, data)
             console.log(res)
-            router.refresh()
             toast.success("User Created")
+            router.refresh()
         } catch (error) {
             toast.error("Something went wrong.")
         } finally {
@@ -75,6 +75,10 @@ const UserForm: React.FC<UserFormProps> = ({
 
     return (
         <>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
             <div className="flex items-center justify-between">
                 <Heading
                     title="Users"
