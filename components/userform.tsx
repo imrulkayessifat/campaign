@@ -36,13 +36,13 @@ const formSchema = z.object({
     email: z.string().email(),
     username: z.string().min(4).max(8),
     isAdmin: z.string(),
-    status: z.string()
+    status: z.string(),
 });
 
 type UserFormValues = z.infer<typeof formSchema>
 
 interface UserFormProps {
-    initialdata: User;
+    initialdata: User | null;
 }
 
 const UserForm: React.FC<UserFormProps> = ({
@@ -56,15 +56,20 @@ const UserForm: React.FC<UserFormProps> = ({
 
     const form = useForm<UserFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialdata
+        defaultValues: initialdata || {
+            email: "",
+            username: "",
+            isAdmin: "",
+            status: "",
+        },
     })
 
-    const onSubmit = async (data: UserFormValues) => {
+    const onSubmit = async (values: UserFormValues) => {
         try {
             setLoading(true)
-            const res = await axios.post(`/api/users/`, data)
+            const res = await axios.patch(`/api/users/${params.data}`, values)
             console.log(res)
-            toast.success("User Created")
+            toast.success("User Updated")
             router.refresh()
         } catch (error) {
             toast.error("Something went wrong.")
@@ -77,17 +82,17 @@ const UserForm: React.FC<UserFormProps> = ({
         <>
             <div className="flex items-center justify-between">
                 <Heading
-                    title="Users"
-                    description="Create or Update users"
+                    title="User"
+                    description="Update User"
                 />
-                <Button
+                {/* <Button
                     disabled={loading}
                     variant="destructive"
                     size="icon"
                     onClick={() => setOpen(true)}
                 >
                     <Trash className="h-4 w-4" />
-                </Button>
+                </Button> */}
             </div>
             <Separator />
             <Form {...form}>

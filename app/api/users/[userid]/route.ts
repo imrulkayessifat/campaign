@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: { userid: string } }
 ) {
     try {
         const { userId } = auth();
@@ -27,13 +27,13 @@ export async function PATCH(
             return new NextResponse("status field is required", { status: 400 });
         }
 
-        if (!params.id) {
+        if (!params.userid) {
             return new NextResponse("userid is required", { status: 400 });
         }
 
         const user = await prismadb.user.updateMany({
             where: {
-                id: params.id
+                id: params.userid
             },
             data: {
                 email,

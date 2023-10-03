@@ -55,8 +55,9 @@ const columns: ColumnDef<AdministratorColumnProps>[] = [
 const AdministratorList: React.FC<AdministratorListProps> = ({
     data
 }) => {
+
     const userModal = useUserModal()
-    console.log(data)
+    
     return (
         <>
             <div className='flex items-center justify-between'>

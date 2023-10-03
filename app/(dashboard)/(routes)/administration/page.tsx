@@ -1,7 +1,7 @@
 import prismadb from '@/lib/prismadb'
 import React from 'react'
 
-import AdministratorList from '@/components/administratorlist'
+import AdministratorList from '@/components/administrator-list'
 
 const AdministrationPage = async () => {
   const users = await prismadb.user.findMany()
