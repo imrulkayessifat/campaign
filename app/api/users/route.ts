@@ -35,7 +35,7 @@ export async function POST(
                 status
             }]
         })
-        console.log(user)
+      
         return NextResponse.json(user)
     } catch (error) {
         console.log('[ADMINISTRATION_POST]', error);

@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react'
-import { Plus } from 'lucide-react'
+import { Plus,ArrowDownUp } from 'lucide-react'
 import { ColumnDef } from "@tanstack/react-table"
 
 import { Heading } from '@/components/ui/heading'
@@ -28,7 +28,17 @@ interface AdministratorListProps {
 const columns: ColumnDef<AdministratorColumnProps>[] = [
     {
         accessorKey: "email",
-        header: "Email",
+        header: ({ column }) => {
+            return (
+              <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              >
+                Email
+                <ArrowDownUp className="ml-2 h-4 w-4" />
+              </Button>
+            )
+          },
     },
     {
         accessorKey: "username",

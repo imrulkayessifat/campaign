@@ -68,7 +68,6 @@ const UserForm: React.FC<UserFormProps> = ({
         try {
             setLoading(true)
             const res = await axios.patch(`/api/users/${params.data}`, values)
-            console.log(res)
             toast.success("User Updated")
             router.refresh()
         } catch (error) {

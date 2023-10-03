@@ -55,7 +55,6 @@ export const UserModal = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values)
     try {
 
       const response = await axios.post('/api/users', values);
@@ -64,7 +63,6 @@ export const UserModal = () => {
       userModal.onClose()
       setLoading(false);
       router.refresh()
-      console.log(response)
     } catch (error) {
       toast.error('Something went wrong');
     } finally {
