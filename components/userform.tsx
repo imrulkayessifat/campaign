@@ -6,7 +6,7 @@ import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
-import { Trash } from "lucide-react"
+import { MoveLeft } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import { User } from "@prisma/client"
 
@@ -85,14 +85,14 @@ const UserForm: React.FC<UserFormProps> = ({
                     title="User"
                     description="Update User"
                 />
-                {/* <Button
+                <Button
                     disabled={loading}
-                    variant="destructive"
+                    variant="outline"
                     size="icon"
-                    onClick={() => setOpen(true)}
+                    onClick={() => router.push('/administration')}
                 >
-                    <Trash className="h-4 w-4" />
-                </Button> */}
+                    <MoveLeft className="h-5 w-5" />
+                </Button>
             </div>
             <Separator />
             <Form {...form}>
