@@ -1,17 +1,21 @@
-"use client"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+export async function getSession() {
+    return await getServerSession(authOptions)
+}
 
-import { signOut } from "next-auth/react";
-import { LogOut } from 'lucide-react';
-
+import UserMenu from "@/components/user-menu";
 import { MobileSidebar } from "@/components/mobile-sidebar";
 
-const Navbar = () => {
-
+const Navbar =async () => {
+    const session = await getSession();
+    const currentUser = session ? session.user : null;
+    console.log(currentUser)
     return (
         <div className="flex items-center p-4">
             <MobileSidebar />
             <div className="flex w-full justify-end">
-                <LogOut className="cursor-pointer" onClick={() => signOut()} />
+                <UserMenu currentUser={currentUser}/>
             </div>
         </div>
     );
