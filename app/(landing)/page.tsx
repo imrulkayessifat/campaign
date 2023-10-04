@@ -1,18 +1,23 @@
-"use client"
+
 
 import React from 'react'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 
-import useLoginModal from '@/hooks/useLoginModal'
-import { Button } from '@/components/ui/button'
+import { getServerSession } from "next-auth/next"
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+export async function getSession() {
+    return await getServerSession(authOptions)
+}
 
-const LandingPage = () => {
-  const router = useRouter()
-  const loginModal = useLoginModal()
+import DashboardConnector from '@/components/dashboard-connector'
+
+const LandingPage = async () => { 
+  const session = await getSession();
+  if(session) redirect("dashboard")
+  
   return (
     <div className='flex items-center justify-center h-full'>
-      {/* <Button onClick={() => router.push("/sign-in")}>Landing</Button> */}
-      <Button onClick={() => loginModal.onOpen()}>Landing</Button>
+      <DashboardConnector />
     </div>
   )
 }

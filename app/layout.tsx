@@ -27,10 +27,9 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
         >
-
-          <ToastProvider />
-          <ModalProvider />
           <AuthProvider>
+            <ToastProvider />
+            <ModalProvider />
             {children}
           </AuthProvider>
         </ThemeProvider>

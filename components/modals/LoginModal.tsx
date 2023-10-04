@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { Facebook } from 'lucide-react';
+import { Github } from 'lucide-react';
 import { FaGoogle } from 'react-icons/fa6'
 import { signIn } from 'next-auth/react'
 
@@ -58,7 +58,7 @@ export const LoginModal = () => {
         callbackUrl,
         redirect: false
       })
-      if(res?.error){
+      if (res?.error) {
         toast.error("Invalid Credentials")
         setLoading(false)
         return
@@ -69,9 +69,43 @@ export const LoginModal = () => {
       toast.error("login error")
       setLoading(false);
     }
-
-
   };
+
+  const handleSubmit =async () => {
+    try {
+      const res = await signIn('github', {
+        callbackUrl,
+        redirect: false
+      })
+      if (res?.error) {
+        toast.error("Something Wrong!")
+        return
+      }
+      loginModal.onClose()
+      router.replace("dashboard")
+    } catch (error) {
+      toast.error("login error")
+      setLoading(false);
+    }
+  }
+
+  const abide =async () => {
+    try {
+      const res = await signIn('google', {
+        callbackUrl,
+        redirect: false
+      })
+      if (res?.error) {
+        toast.error("Something Wrong!")
+        return
+      }
+      loginModal.onClose()
+      router.replace("dashboard")
+    } catch (error) {
+      toast.error("login error")
+      setLoading(false);
+    }
+  }
 
   return (
     <Modal
@@ -116,18 +150,18 @@ export const LoginModal = () => {
                     )}
                   />
                 </div>
-                <div className="pt-6 pb-6 space-x-2 flex items-center justify-center w-full">
+                <div className="pt-6 pb-2 space-x-2 flex items-center justify-center w-full">
                   <Button variant="outline" disabled={loading} type="submit">Log In</Button>
                 </div>
               </form>
             </Form>
             <Separator />
             <div className="flex justify-between m-4 gap-4">
-              <Button variant="outline">
-                <Facebook className="m-1" />
-                Facebook
+              <Button onClick={handleSubmit} variant="outline">
+                <Github className="m-1" />
+                Github
               </Button>
-              <Button variant="outline">
+              <Button onClick={abide} variant="outline">
                 <FaGoogle className="m-1" />
                 Google
               </Button>

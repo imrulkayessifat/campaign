@@ -1,11 +1,17 @@
-import React from 'react'
-
+import React, { useEffect, useState } from 'react'
+import { getServerSession } from "next-auth/next"
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+export async function getSession() {
+    return await getServerSession(authOptions)
+}
 import Navbar from '@/components/navbar'
-import {Sidebar} from '@/components/sidebar'
+import { Sidebar } from '@/components/sidebar'
 
-const DashboardLayout = (
+const DashboardLayout =async (
     { children }: { children: React.ReactNode }
 ) => {
+    const session = await getSession();
+    console.log(session)
     return (
         <div className='h-full relative'>
             <div className='hidden h-full md:flex
@@ -14,8 +20,8 @@ const DashboardLayout = (
                 <Sidebar />
             </div>
             <main className='md:pl-56 pb-10'>
-                <Navbar  />
-                
+                <Navbar />
+
                 {children}
             </main>
         </div>

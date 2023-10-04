@@ -5,9 +5,9 @@ import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter,useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { Facebook } from 'lucide-react';
+import { Github } from 'lucide-react';
 import { FaGoogle } from 'react-icons/fa6'
 
 import { Modal } from "@/components/ui/modal";
@@ -25,6 +25,7 @@ import {
 import useLoginModal from "@/hooks/useLoginModal";
 import useRegisterModal from "@/hooks/useRegisterModal";
 import { Button } from "@/components/ui/button";
+import { signIn } from "next-auth/react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -35,6 +36,8 @@ const formSchema = z.object({
 export const RegisterModal = () => {
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal()
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
@@ -63,6 +66,42 @@ export const RegisterModal = () => {
       setLoading(false);
     }
   };
+
+  const handleSubmit =async () => {
+    try {
+      const res = await signIn('github', {
+        callbackUrl,
+        redirect: false
+      })
+      if (res?.error) {
+        toast.error("Something Wrong!")
+        return
+      }
+      registerModal.onClose()
+      router.replace("dashboard")
+    } catch (error) {
+      toast.error("login error")
+      setLoading(false);
+    }
+  }
+
+  const abide =async () => {
+    try {
+      const res = await signIn('google', {
+        callbackUrl,
+        redirect: false
+      })
+      if (res?.error) {
+        toast.error("Something Wrong!")
+        return
+      }
+      loginModal.onClose()
+      router.replace("dashboard")
+    } catch (error) {
+      toast.error("login error")
+      setLoading(false);
+    }
+  }
 
   return (
     <Modal
@@ -120,18 +159,18 @@ export const RegisterModal = () => {
                     )}
                   />
                 </div>
-                <div className="pt-6 pb-6 space-x-2 flex items-center justify-center w-full">
+                <div className="pt-6 pb-2 space-x-2 flex items-center justify-center w-full">
                   <Button variant="outline" disabled={loading} type="submit">Create</Button>
                 </div>
               </form>
             </Form>
             <Separator />
             <div className="flex justify-between m-4 gap-4">
-              <Button variant="outline">
-                <Facebook className="m-1" />
-                Facebook
+              <Button onClick={handleSubmit} variant="outline">
+                <Github className="m-1" />
+                Github
               </Button>
-              <Button variant="outline">
+              <Button onClick={abide} variant="outline">
                 <FaGoogle className="m-1" />
                 Google
               </Button>
