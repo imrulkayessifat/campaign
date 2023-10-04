@@ -67,7 +67,7 @@ const AdministratorList: React.FC<AdministratorListProps> = ({
 }) => {
 
     const userModal = useUserModal()
-    
+    console.log(data)
     return (
         <>
             <div className='flex items-center justify-between'>

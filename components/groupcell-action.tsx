@@ -16,37 +16,34 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";
 
-interface AdministratorColumnProps {
+interface UserGroupColumnProps {
     id: string;
-    email: string;
-    username: string;
-    isAdmin: string;
-    status: string;
-    createdAt: Date;
-    emailVerified: Date | null;
+    userId: string;
+    name: string
 }
 
 interface CellActionProps {
-  data: AdministratorColumnProps;
+  data: UserGroupColumnProps;
 }
 
-export const CellAction: React.FC<CellActionProps> = ({
+export const UserGroupCellAction: React.FC<CellActionProps> = ({
   data,
 }) => {
   const router = useRouter();
   const params = useParams();
-  console.log(data)
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const onConfirm = async () => {
     try {
-      setLoading(true);
-      await axios.delete(`/api/users/${data.id}`);
-      toast.success('User deleted.');
+      
+      await axios.delete(`/api/usergroup/${data.id}`);
+      toast.success('User Group deleted.');
       router.refresh();
+      setLoading(false)
     } catch (error) {
       toast.error('Error make in delete operation!');
+      setLoading(false);
     } finally {
       setOpen(false);
       setLoading(false);
@@ -55,7 +52,7 @@ export const CellAction: React.FC<CellActionProps> = ({
 
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
-    toast.success('User ID copied to clipboard.');
+    toast.success('User Group ID copied to clipboard.');
   }
 
   return (
@@ -81,7 +78,7 @@ export const CellAction: React.FC<CellActionProps> = ({
             <Copy className="mr-2 h-4 w-4" /> Copy Id
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/administration/${data.id}`)}
+            onClick={() => router.push(`/dashboard/usergroup/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>

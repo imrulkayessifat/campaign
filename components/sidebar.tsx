@@ -24,12 +24,12 @@ const routes = [
     href: '/dashboard/administration',
     color: "text-violet-500",
   },
-  // {
-  //   label: 'Client List',
-  //   icon: Users,
-  //   color: "text-pink-700",
-  //   href: '/dashboard/client',
-  // },
+  {
+    label: 'User Group',
+    icon: Users,
+    color: "text-pink-700",
+    href: '/dashboard/usergroup',
+  },
   // {
   //   label: 'Payment',
   //   icon: BadgeDollarSign,
