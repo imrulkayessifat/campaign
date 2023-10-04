@@ -21,38 +21,38 @@ const routes = [
   {
     label: 'Administration',
     icon: User2,
-    href: '/administration',
+    href: '/dashboard/administration',
     color: "text-violet-500",
   },
-  {
-    label: 'Client List',
-    icon: Users,
-    color: "text-pink-700",
-    href: '/client',
-  },
-  {
-    label: 'Payment',
-    icon: BadgeDollarSign,
-    color: "text-orange-700",
-    href: '/payment',
-  },
-  {
-    label: 'Campaign List',
-    icon: Tent,
-    color: "text-emerald-500",
-    href: '/campain',
-  },
-  {
-    label: 'Users',
-    icon: Contact,
-    color: "text-green-700",
-    href: '/users',
-  },
-  {
-    label: 'Settings',
-    icon: Settings,
-    href: '/settings',
-  },
+  // {
+  //   label: 'Client List',
+  //   icon: Users,
+  //   color: "text-pink-700",
+  //   href: '/dashboard/client',
+  // },
+  // {
+  //   label: 'Payment',
+  //   icon: BadgeDollarSign,
+  //   color: "text-orange-700",
+  //   href: '/dashboard/payment',
+  // },
+  // {
+  //   label: 'Campaign List',
+  //   icon: Tent,
+  //   color: "text-emerald-500",
+  //   href: '/dashboard/campain',
+  // },
+  // {
+  //   label: 'Users',
+  //   icon: Contact,
+  //   color: "text-green-700",
+  //   href: '/dashboard/users',
+  // },
+  // {
+  //   label: 'Settings',
+  //   icon: Settings,
+  //   href: '/dashboard/settings',
+  // },
 ];
 
 export const Sidebar = () => {
