@@ -21,8 +21,14 @@ model User {
   updatedAt       DateTime @updatedAt
   userGroupName   String?  @default("general")
 
-  accounts Account[]
-  usergroup UserGroup[]
+  accounts        Account[]
+  usergroup       UserGroup[]
+  role            Role      @default(USER) 
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Account {

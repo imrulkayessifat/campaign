@@ -33,10 +33,14 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 
+const roles = ["USER", "ADMIN"] as const;
+type Role = typeof roles[number];
+
 const formSchema = z.object({
     name: z.string(),
     email: z.string().email(),
     userGroupName: z.string(),
+    role: z.enum(roles)
 });
 
 type UserFormValues = z.infer<typeof formSchema>
@@ -47,9 +51,9 @@ interface UserFormProps {
 }
 
 const UserForm: React.FC<UserFormProps> = ({
-    initialdata,group
+    initialdata, group
 }) => {
-    
+
     const params = useParams()
     const router = useRouter()
     const [open, setOpen] = useState(false);
@@ -58,9 +62,10 @@ const UserForm: React.FC<UserFormProps> = ({
     const form = useForm<UserFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: initialdata || {
-            email:'',
-            name:'',
-            userGroupName:''
+            email: '',
+            name: '',
+            userGroupName: '',
+            role: ''
         },
     })
 
@@ -97,7 +102,7 @@ const UserForm: React.FC<UserFormProps> = ({
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
                     <div className="grid md:grid-cols-2 grid-cols-1 gap-8">
-                    <FormField
+                        <FormField
                             control={form.control}
                             name="email"
                             render={({ field }) => (
@@ -136,11 +141,34 @@ const UserForm: React.FC<UserFormProps> = ({
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    {group.map((v,k)=>{
+                                                    {group.map((v, k) => {
                                                         return (
                                                             <SelectItem key={k} value={v.name}>{v.name}</SelectItem>
                                                         )
                                                     })}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="role"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Role ?</FormLabel>
+                                    <FormControl>
+                                        <Select onValueChange={field.onChange} disabled={loading} {...field}>
+                                            <SelectTrigger className="w-[180px]">
+                                                <SelectValue placeholder="Select" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectItem value="ADMIN">ADMIN</SelectItem>
+                                                    <SelectItem value="USER">USER</SelectItem>
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>

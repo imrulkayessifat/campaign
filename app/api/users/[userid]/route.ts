@@ -9,7 +9,7 @@ export async function PATCH(
         const body = await req.json();
         console.log(body)
         console.log(params)
-        const { email,name,userGroupName } = body;
+        const { email,name,userGroupName,role } = body;
 
         
 
@@ -26,7 +26,8 @@ export async function PATCH(
             data: {
                 email,
                 name,
-                userGroupName
+                userGroupName,
+                role
             }
         })
 

@@ -15,8 +15,8 @@ interface AdministratorColumnProps {
     id: string;
     email: string;
     name: string;
-    isAdmin: string;
-    status: string;
+    userGroupName: string;
+    role: "ADMIN" | "USER";
     createdAt: Date;
     emailVerified: Date | null;
 }
@@ -47,6 +47,10 @@ const columns: ColumnDef<AdministratorColumnProps>[] = [
     {
         accessorKey: "userGroupName",
         header: "Group",
+    },
+    {
+        accessorKey: "role",
+        header: "Role",
     },
     {
         id: "actions",
