@@ -1,5 +1,4 @@
 import prismadb from "@/lib/prismadb";
-import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 export async function PATCH(
@@ -7,29 +6,18 @@ export async function PATCH(
     { params }: { params: { userid: string } }
 ) {
     try {
-        const { userId } = auth();
         const body = await req.json();
-        const { email, username, isAdmin, status } = body;
+        console.log(body)
+        console.log(params)
+        const { email,name,userGroupName } = body;
 
-        if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 });
+        
+
+        if (!userGroupName) {
+            return new NextResponse("Group field is required", { status: 400 });
         }
 
-        if (!username) {
-            return new NextResponse("username field is required", { status: 400 });
-        }
-
-        if (!isAdmin) {
-            return new NextResponse("isAdmin field is required", { status: 400 });
-        }
-
-        if (!status) {
-            return new NextResponse("status field is required", { status: 400 });
-        }
-
-        if (!params.userid) {
-            return new NextResponse("userid is required", { status: 400 });
-        }
+        
 
         const user = await prismadb.user.updateMany({
             where: {
@@ -37,9 +25,8 @@ export async function PATCH(
             },
             data: {
                 email,
-                username,
-                isAdmin,
-                status
+                name,
+                userGroupName
             }
         })
 

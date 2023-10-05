@@ -9,6 +9,7 @@ import { toast } from "react-hot-toast"
 import { MoveLeft } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import { User } from "@prisma/client"
+import { UserGroup } from "@prisma/client"
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -33,34 +34,33 @@ import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
 
 const formSchema = z.object({
+    name: z.string(),
     email: z.string().email(),
-    username: z.string().min(4).max(8),
-    isAdmin: z.string(),
-    status: z.string(),
+    userGroupName: z.string(),
 });
 
 type UserFormValues = z.infer<typeof formSchema>
 
 interface UserFormProps {
     initialdata: User | null;
+    group: UserGroup | null;
 }
 
 const UserForm: React.FC<UserFormProps> = ({
-    initialdata
+    initialdata,group
 }) => {
+    
     const params = useParams()
     const router = useRouter()
-
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const form = useForm<UserFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: initialdata || {
-            email: "",
-            username: "",
-            isAdmin: "",
-            status: "",
+            email:'',
+            name:'',
+            userGroupName:''
         },
     })
 
@@ -88,7 +88,7 @@ const UserForm: React.FC<UserFormProps> = ({
                     disabled={loading}
                     variant="outline"
                     size="icon"
-                    onClick={() => router.push('/administration')}
+                    onClick={() => router.push('/dashboard/administration')}
                 >
                     <MoveLeft className="h-5 w-5" />
                 </Button>
@@ -97,14 +97,14 @@ const UserForm: React.FC<UserFormProps> = ({
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
                     <div className="grid md:grid-cols-2 grid-cols-1 gap-8">
-                        <FormField
+                    <FormField
                             control={form.control}
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
-                                        <Input disabled={loading} placeholder="Email" {...field} />
+                                        <Input disabled={true} placeholder="Email" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -112,10 +112,10 @@ const UserForm: React.FC<UserFormProps> = ({
                         />
                         <FormField
                             control={form.control}
-                            name="username"
+                            name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>UserName</FormLabel>
+                                    <FormLabel>Name</FormLabel>
                                     <FormControl>
                                         <Input disabled={loading} placeholder="UserName" {...field} />
                                     </FormControl>
@@ -125,10 +125,10 @@ const UserForm: React.FC<UserFormProps> = ({
                         />
                         <FormField
                             control={form.control}
-                            name="isAdmin"
+                            name="userGroupName"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>IS Admin ?</FormLabel>
+                                    <FormLabel>Group ?</FormLabel>
                                     <FormControl>
                                         <Select onValueChange={field.onChange} disabled={loading} {...field}>
                                             <SelectTrigger className="w-[180px]">
@@ -136,32 +136,11 @@ const UserForm: React.FC<UserFormProps> = ({
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectItem value="admin">admin</SelectItem>
-                                                    <SelectItem value="user">user</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="status"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Status</FormLabel>
-                                    <FormControl>
-                                        <Select onValueChange={field.onChange} disabled={loading} {...field}>
-                                            <SelectTrigger className="w-[180px]">
-                                                <SelectValue placeholder="Select" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectItem value="pending">pending</SelectItem>
-                                                    <SelectItem value="active">active</SelectItem>
+                                                    {group.map((v,k)=>{
+                                                        return (
+                                                            <SelectItem key={k} value={v.name}>{v.name}</SelectItem>
+                                                        )
+                                                    })}
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>

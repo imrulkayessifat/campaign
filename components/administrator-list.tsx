@@ -14,7 +14,7 @@ import { CellAction } from '@/components/cell-action';
 interface AdministratorColumnProps {
     id: string;
     email: string;
-    username: string;
+    name: string;
     isAdmin: string;
     status: string;
     createdAt: Date;
@@ -41,20 +41,12 @@ const columns: ColumnDef<AdministratorColumnProps>[] = [
           },
     },
     {
-        accessorKey: "username",
-        header: "Username",
+        accessorKey: "name",
+        header: "Name",
     },
     {
-        accessorKey: "isAdmin",
-        header: "Type",
-    },
-    {
-        accessorKey: "status",
-        header: "Status",
-    },
-    {
-        accessorKey: "emailVerified",
-        header: "Verification"
+        accessorKey: "userGroupName",
+        header: "Group",
     },
     {
         id: "actions",
@@ -72,9 +64,9 @@ const AdministratorList: React.FC<AdministratorListProps> = ({
         <>
             <div className='flex items-center justify-between'>
                 <Heading title={`Users (${data.length})`} description="Manage users for your campaign" />
-                <Button onClick={() => userModal.onOpen()}>
+                {/* <Button onClick={() => userModal.onOpen()}>
                     <Plus className="mr-2 h-4 w-4" /> Add New
-                </Button>
+                </Button> */}
             </div>
             <Separator />
             <DataTable columns={columns} data={data} searchKey="email" />

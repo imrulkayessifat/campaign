@@ -13,10 +13,11 @@ const AdministratorUpdate = async ({
             id: params.data
         }
     });
+    const group = await prismadb.userGroup.findMany();
     
     return (
         <div className="h-full p-14 space-y-4">
-            <UserForm initialdata={user} />
+            <UserForm initialdata={user} group={group} />
         </div>
     )
 }
