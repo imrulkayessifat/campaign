@@ -3,11 +3,10 @@
 import Image from "next/image";
 
 interface AvatarProps {
-  src: string ;
+  src: string | null | undefined ;
 }
 
 const Avatar: React.FC<AvatarProps> = ({ src }) => {
-  console.log(src)
   return (
     <>{
       src && (<Image

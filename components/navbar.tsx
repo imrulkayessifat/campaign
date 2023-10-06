@@ -10,7 +10,17 @@ import { MobileSidebar } from "@/components/mobile-sidebar";
 const Navbar =async () => {
     const session = await getSession();
     const currentUser = session ? session.user : null;
-    console.log(currentUser)
+    if (!currentUser) {
+        return (
+            <div className="flex items-center p-4">
+                <MobileSidebar />
+                <div className="flex w-full justify-end">
+                    
+                    <p>Not logged in</p>
+                </div>
+            </div>
+        );
+    }
     return (
         <div className="flex items-center p-4">
             <MobileSidebar />

@@ -28,7 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useUserGroupModal } from "@/hooks/userUserGroupModal";
+import { useUserGroupModal } from "@/hooks/useUserGroupModal";
 import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({

@@ -8,7 +8,6 @@ export async function POST(
         const body = await req.json();
         const { email, name, password } = body;
         const hashedPassword = await bcrypt.hash(password,12);
-        console.log(email,name,hashedPassword)
         if (!email) {
             return new NextResponse("email field is required", { status: 400 });
         }

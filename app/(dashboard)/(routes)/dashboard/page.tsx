@@ -5,13 +5,11 @@ import { useRouter } from "next/navigation";
 
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-// import getCurrentUser from '@/hooks/getCurrentUser'
 import { tools } from "@/constants";
 
 export default function HomePage() {
   const router = useRouter();
-  // const currentuser = getCurrentUser();
-  // console.log(currentuser)
+
   return (
     <div>
       <div className="mb-8 space-y-4">

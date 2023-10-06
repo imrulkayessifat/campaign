@@ -9,9 +9,9 @@ import Avatar from "@/components/avatar";
 import MenuItem from "@/components/MenuItem";
 
 interface User {
-    name: string ;
-    email: string ;
-    image: string ;
+    name?: string | null | undefined;
+    email?: string | null | undefined;
+    image?: string | null | undefined;
 }
 
 interface CurrentUser {

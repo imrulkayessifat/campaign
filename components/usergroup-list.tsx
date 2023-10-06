@@ -7,11 +7,11 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Heading } from '@/components/ui/heading'
 import { Button } from '@/components/ui/button'
 import { Separator } from "@/components/ui/separator";
-import { useUserGroupModal } from '@/hooks/userUserGroupModal';
+import { useUserGroupModal } from '@/hooks/useUserGroupModal';
 import DataTable from '@/components/ui/datatable';
 import { UserGroupCellAction } from '@/components/groupcell-action';
 
-interface UserGroupColumnProps {
+export interface UserGroupColumnProps {
     id: string;
     userId: string;
     name:string;
@@ -21,7 +21,7 @@ interface UserGroupListProps {
     data: UserGroupColumnProps[]
 }
 
-const columns: ColumnDef<UserGroupListProps>[] = [
+const columns: ColumnDef<UserGroupListProps,any>[] = [
     {
         accessorKey:"id",
         header: "Id"
@@ -49,9 +49,7 @@ const columns: ColumnDef<UserGroupListProps>[] = [
 const UserGroupList: React.FC<UserGroupListProps> = ({
     data
 }) => {
-
     const userGroupModal = useUserGroupModal()
-    console.log(data)
     return (
         <>
             <div className='flex items-center justify-between'>

@@ -13,16 +13,21 @@ import { CellAction } from '@/components/cell-action';
 
 interface AdministratorColumnProps {
     id: string;
-    email: string;
-    name: string;
-    userGroupName: string;
+    email: string | null;
+    name: string | null;
+    userGroupName: string | null;
     role: "ADMIN" | "USER";
+    image: string | null;
+    hashedPassword: string | null;
+    updatedAt : Date;
     createdAt: Date;
     emailVerified: Date | null;
 }
 
+
+
 interface AdministratorListProps {
-    data: AdministratorColumnProps[]
+    data: AdministratorColumnProps[],
 }
 
 const columns: ColumnDef<AdministratorColumnProps>[] = [
@@ -54,16 +59,14 @@ const columns: ColumnDef<AdministratorColumnProps>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => <CellAction data={row.original} />
+        cell: ({ row }) => <CellAction data={row.original}/>
     },
 ];
 
 const AdministratorList: React.FC<AdministratorListProps> = ({
-    data
+    data,
 }) => {
-
     const userModal = useUserModal()
-    console.log(data)
     return (
         <>
             <div className='flex items-center justify-between'>
@@ -73,7 +76,7 @@ const AdministratorList: React.FC<AdministratorListProps> = ({
                 </Button> */}
             </div>
             <Separator />
-            <DataTable columns={columns} data={data} searchKey="email" />
+            <DataTable  columns={columns} data={data} searchKey="email" />
         </>
     )
 }

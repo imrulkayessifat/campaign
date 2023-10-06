@@ -26,33 +26,40 @@ interface AdministratorColumnProps {
   createdAt: Date;
   updatedAt: Date;
   userGroupName: string | null;
+  role: "ADMIN" | "USER"
 }
+
+
 
 interface CellActionProps {
   data: AdministratorColumnProps;
+  
 }
 
 export const CellAction: React.FC<CellActionProps> = ({
   data,
+  
 }) => {
   const router = useRouter();
   const params = useParams();
-  console.log(data)
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const onConfirm = async () => {
-    try {
-      setLoading(true);
-      await axios.delete(`/api/users/${data.id}`);
-      toast.success('User deleted.');
-      router.refresh();
-    } catch (error) {
-      toast.error('Error make in delete operation!');
-    } finally {
-      setOpen(false);
-      setLoading(false);
-    }
+      try {
+        setLoading(true);
+        const res = await axios.delete(`/api/users/${data.id}`);
+        console.log(res)
+        toast.success('User deleted.');
+        setLoading(false)
+        router.refresh();
+      } catch (error) {
+        setLoading(false)
+        toast.error('ONlY ADMIN CAN DELETE USER!');
+      } finally {
+        setOpen(false);
+        setLoading(false);
+      }
   };
 
   const onCopy = (id: string) => {
@@ -72,7 +79,7 @@ export const CellAction: React.FC<CellActionProps> = ({
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
             <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
+            <MoreHorizontal  className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

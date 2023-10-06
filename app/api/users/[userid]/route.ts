@@ -1,18 +1,20 @@
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
-
+import getCurrentUser from "@/app/actions/getCurrentUser";
 export async function PATCH(
     req: Request,
     { params }: { params: { userid: string } }
 ) {
     try {
         const body = await req.json();
-        console.log(body)
-        console.log(params)
         const { email,name,userGroupName,role } = body;
 
+        const currentUser =await getCurrentUser()
+        console.log(currentUser)
+        if(currentUser?.role==='USER'){
+            return new NextResponse("Only admin can delete a user", { status: 400 })
+        }
         
-
         if (!userGroupName) {
             return new NextResponse("Group field is required", { status: 400 });
         }
@@ -43,7 +45,11 @@ export async function DELETE(
     { params }: { params: { userid: string } }
 ) {
     try {
-        const { userId } = auth();
+        const currentUser =await getCurrentUser()
+        console.log(currentUser)
+        if(currentUser?.role==='USER'){
+            return new NextResponse("Only admin can delete a user", { status: 400 })
+        }
         const user = await prismadb.user.delete({
             where: {
                 id: params.userid

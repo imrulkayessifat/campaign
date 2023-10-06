@@ -47,7 +47,7 @@ type UserFormValues = z.infer<typeof formSchema>
 
 interface UserFormProps {
     initialdata: User | null;
-    group: UserGroup | null;
+    group: UserGroup[] | null;
 }
 
 const UserForm: React.FC<UserFormProps> = ({
@@ -61,12 +61,19 @@ const UserForm: React.FC<UserFormProps> = ({
 
     const form = useForm<UserFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialdata || {
-            email: '',
-            name: '',
-            userGroupName: '',
-            role: ''
-        },
+        defaultValues: initialdata
+            ? {
+                email: initialdata.email || '',
+                name: initialdata.name || '',
+                userGroupName: initialdata.userGroupName || '',
+                role: initialdata.role || 'USER', // You can choose 'USER' or 'ADMIN' as the default role
+            }
+            : {
+                email: '',
+                name: '',
+                userGroupName: '',
+                role: 'USER', // You can choose 'USER' or 'ADMIN' as the default role
+            },
     })
 
     const onSubmit = async (values: UserFormValues) => {
@@ -76,7 +83,7 @@ const UserForm: React.FC<UserFormProps> = ({
             toast.success("User Updated")
             router.refresh()
         } catch (error) {
-            toast.error("Something went wrong.")
+            toast.error("ONlY ADMIN CAN UPDATE USER!")
         } finally {
             setLoading(false)
         }
@@ -141,7 +148,7 @@ const UserForm: React.FC<UserFormProps> = ({
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    {group.map((v, k) => {
+                                                    {group?.map((v: UserGroup, k: number) => {
                                                         return (
                                                             <SelectItem key={k} value={v.name}>{v.name}</SelectItem>
                                                         )
