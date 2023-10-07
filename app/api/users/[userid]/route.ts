@@ -11,7 +11,7 @@ export async function PATCH(
         const { email,name,userGroupName,role } = body;
 
         const currentUser =await getCurrentUser()
-        console.log(currentUser)
+    
         if(currentUser?.role==='USER'){
             return new NextResponse("Only admin can delete a user", { status: 400 })
         }

@@ -29,6 +29,7 @@
     "fabricjs-react": "^1.2.1",
     "lucide-react": "^0.279.0",
     "mongodb": "^6.1.0",
+    "multiselect-react-dropdown": "^2.0.25",
     "next": "latest",
     "next-auth": "^4.23.2",
     "next-cloudinary": "^4.23.1",

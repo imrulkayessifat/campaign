@@ -2,7 +2,7 @@
 
 import * as z from "zod"
 import axios from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
@@ -10,6 +10,7 @@ import { MoveLeft } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import { User } from "@prisma/client"
 import { UserGroup } from "@prisma/client"
+import Multiselect from 'multiselect-react-dropdown';
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -32,6 +33,7 @@ import {
 } from "@/components/ui/form"
 import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
+import { AiOutlineConsoleSql } from "react-icons/ai"
 
 const roles = ["USER", "ADMIN"] as const;
 type Role = typeof roles[number];
@@ -39,7 +41,6 @@ type Role = typeof roles[number];
 const formSchema = z.object({
     name: z.string(),
     email: z.string().email(),
-    userGroupName: z.string(),
     role: z.enum(roles)
 });
 
@@ -59,24 +60,49 @@ const UserForm: React.FC<UserFormProps> = ({
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    let data = group ? group.map(item => ({ id: item.id, name: item.name })) : [];
+
+    console.log(data)
+    let array2 = initialdata?.userGroupName;
+    let result = data.filter(obj => array2.includes(obj.name));
+    console.log(result)
+
+    const [selectedValue, setSelectedValue] = useState([]);
+
+    useEffect(() => {
+
+
+        setSelectedValue(result);
+    }, [initialdata])
+
+    const onSelect = (selectedList, selectedItem) => {
+        console.log(selectedList)
+        setSelectedValue(selectedList);
+    }
+
+    const onRemove = (selectedList, removedItem) => {
+        setSelectedValue(selectedList);
+    }
+
     const form = useForm<UserFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: initialdata
             ? {
                 email: initialdata.email || '',
                 name: initialdata.name || '',
-                userGroupName: initialdata.userGroupName || '',
                 role: initialdata.role || 'USER', // You can choose 'USER' or 'ADMIN' as the default role
             }
             : {
                 email: '',
                 name: '',
-                userGroupName: '',
                 role: 'USER', // You can choose 'USER' or 'ADMIN' as the default role
             },
     })
 
     const onSubmit = async (values: UserFormValues) => {
+        let userGroupName: any[] = []
+        selectedValue.map((item) => { userGroupName.push(item.name) });
+        values.userGroupName = userGroupName
         try {
             setLoading(true)
             const res = await axios.patch(`/api/users/${params.data}`, values)
@@ -135,31 +161,12 @@ const UserForm: React.FC<UserFormProps> = ({
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="userGroupName"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Group ?</FormLabel>
-                                    <FormControl>
-                                        <Select onValueChange={field.onChange} disabled={loading} {...field}>
-                                            <SelectTrigger className="w-[180px]">
-                                                <SelectValue placeholder="Select" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    {group?.map((v: UserGroup, k: number) => {
-                                                        return (
-                                                            <SelectItem key={k} value={v.name}>{v.name}</SelectItem>
-                                                        )
-                                                    })}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
+                        <Multiselect
+                            options={data}
+                            selectedValues={selectedValue}
+                            onSelect={onSelect}
+                            onRemove={onRemove}
+                            displayValue="name"
                         />
                         <FormField
                             control={form.control}
