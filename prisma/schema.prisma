@@ -23,12 +23,32 @@ model User {
 
   accounts        Account[]
   usergroup       UserGroup[]
+  campaign        Campaign[]
   role            Role      @default(USER) 
 }
 
 enum Role {
   USER
   ADMIN
+}
+
+enum Approval {
+  PENDING
+  APPROVE
+}
+model Campaign {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  html               Json
+  userId             String   @db.ObjectId
+  groupId            String   @db.ObjectId
+  startDate          DateTime
+  endDate            DateTime
+  state              Approval @default(PENDING)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group UserGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  
 }
 
 model Account {
@@ -56,5 +76,6 @@ model UserGroup {
   name   String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaign Campaign[]
 
 }

@@ -7,6 +7,7 @@ import { LoginModal } from "@/components/modals/LoginModal";
 import { RegisterModal } from "@/components/modals/RegisterModal";
 import { UserGroupModal } from "@/components/modals/usergroup-modal";
 
+
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
 

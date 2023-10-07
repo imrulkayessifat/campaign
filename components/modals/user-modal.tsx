@@ -72,8 +72,8 @@ export const UserModal = () => {
 
   return (
     <Modal
-      title="Create store"
-      description="Add a new store to manage products and categories."
+      title="User"
+      description="Manage User."
       isOpen={userModal.isOpen}
       onClose={() => {
         form.reset();

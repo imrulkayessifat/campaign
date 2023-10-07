@@ -1,6 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 import getCurrentUser from "@/app/actions/getCurrentUser";
+import { group } from "console";
 export async function PATCH(
     req: Request,
     { params }: { params: { userid: string } }
@@ -18,8 +19,6 @@ export async function PATCH(
         if (!userGroupName) {
             return new NextResponse("Group field is required", { status: 400 });
         }
-
-        
 
         const user = await prismadb.user.updateMany({
             where: {
