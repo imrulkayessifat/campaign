@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from 'react'
+import { useState, useRef, SetStateAction } from 'react'
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, Controller } from "react-hook-form";
@@ -49,7 +49,7 @@ interface CampaignProps {
 const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
 
     const [loading, setLoading] = useState(false);
-    const [emailHtml, setEmailHtml] = useState({});
+    const [emailHtml, setEmailHtml] = useState('');
     const router = useRouter();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -68,22 +68,33 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
         }
     ]);
 
+    interface objProps {
+        name:string;
+        group:string;
+        startDate:Date;
+        endDate:null;
+        html:string;
+    }
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        let obj = {}
+        let obj:objProps = {
+            name:'',
+            group:'',
+            html:'',
+            startDate:new Date(),
+            endDate:null
+        }
         obj.name = values?.name;
         obj.group = values?.group;
         obj.startDate = dateRanges[0]?.startDate;
         obj.endDate = dateRanges[0]?.endDate;
         obj.html = emailHtml
-        console.log(obj)
-
         
         try {
             const response = await axios.post('/api/campaign', obj);
             toast.success("Campaign Created")
-            // form.reset();
-            //router.refresh();
+            form.reset();
+            router.refresh();
         } catch (error) {
             toast.error('Something went wrong');
         }
@@ -96,8 +107,8 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
     const saveDesign = () => {
         const unlayer = emailEditorRef.current?.editor;
 
-        unlayer?.saveDesign((design) => {
-            setEmailHtml(design);;
+        unlayer?.saveDesign((design: SetStateAction<string>) => {
+            setEmailHtml(design);
 
         });
     };
@@ -124,15 +135,15 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
         }
     };
 
-    const onDesignLoad = (data) => {
+    const onDesignLoad = (data: any) => {
         console.log('onDesignLoad', data);
     };
 
-    const onLoad: EmailEditorProps['onLoad'] = (unlayer) => {
-        console.log('onLoad', unlayer);
-        unlayer.addEventListener('design:loaded', onDesignLoad);
-        unlayer.loadDesign(sample);
-    };
+    // const onLoad: EmailEditorProps['onLoad'] = (unlayer) => {
+    //     console.log('onLoad', unlayer);
+    //     unlayer.addEventListener('design:loaded', onDesignLoad);
+    //     unlayer.loadDesign(sample);
+    // };
 
     const onReady: EmailEditorProps['onReady'] = (unlayer) => {
         console.log('onReady', unlayer);
