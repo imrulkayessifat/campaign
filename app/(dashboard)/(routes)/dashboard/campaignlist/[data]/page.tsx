@@ -1,6 +1,6 @@
 import prismadb from "@/lib/prismadb";
 
-import CampaignForm from "@/components/campaign-form";
+import CampaignListForm from "@/components/campaignlist-form";
 
 const CampaignUpdate = async ({
     params
@@ -14,11 +14,13 @@ const CampaignUpdate = async ({
         }
     });
 
+    const usergroup = await prismadb.userGroup.findMany()
+
     console.log(campaign)
     
     return (
         <div className="h-full p-14 space-y-4">
-            <CampaignForm initialdata={campaign} />
+            <CampaignListForm initaildata={campaign} usergroup={usergroup}/>
         </div>
     )
 }

@@ -3,32 +3,57 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(
     req: Request,
-    { params }: { params: { groupid: string } }
+    { params }: { params: { data: string } }
 ) {
     try {
         const body = await req.json();
-        const { name } = body;
+        const { name,group,startDate,endDate,design } = body;
+        
 
         if (!name) {
             return new NextResponse("name field is required", { status: 400 });
         }
 
-        if (!params.groupid) {
+        if (!startDate) {
+            return new NextResponse("startDate field is required", { status: 400 });
+        }
+
+        if (!endDate) {
+            return new NextResponse("endDate field is required", { status: 400 });
+        }
+
+        if (!design) {
+            return new NextResponse("design field is required", { status: 400 });
+        }
+
+        if (!params.data) {
             return new NextResponse("id is required", { status: 400 });
         }
 
-        const usergroup = await prismadb.userGroup.updateMany({
-            where: {
-                id: params?.groupid
-            },
-            data: {
-                name
+        const groupData = await prismadb.userGroup.findMany({
+            where:{
+                name:group
             }
         })
 
-        return NextResponse.json(usergroup)
+        const groupId = groupData[0].id;
+        console.log(groupId)
+        const campaign = await prismadb.campaign.updateMany({
+            where: {
+                id: params?.data
+            },
+            data: {
+                name,
+                groupId,
+                startDate,
+                endDate,
+                design
+            }
+        })
+
+        return NextResponse.json(campaign)
     } catch (error) {
-        console.log('[USERGROUP_PATCH]', error)
+        console.log('[CAMPAIGN_PATCH]', error)
         return new NextResponse("Internal Error", { status: 500 })
     }
 }

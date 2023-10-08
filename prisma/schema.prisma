@@ -39,7 +39,7 @@ enum Approval {
 model Campaign {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   name               String
-  html               String
+  design             Json
   userId             String   @db.ObjectId
   groupId            String   @db.ObjectId
   startDate          DateTime

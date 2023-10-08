@@ -34,7 +34,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Campaign, UserGroup } from '@prisma/client';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
+import { useParams,useRouter } from 'next/navigation';
 
 const formSchema = z.object({
     name: z.string(),
@@ -42,22 +42,30 @@ const formSchema = z.object({
 
 });
 
-interface CampaignProps {
+interface CampaignListFormProps {
 
+    initaildata: Campaign | null;
     usergroup: UserGroup[] | null;
 }
 
-const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
+const CampaignListForm: React.FC<CampaignListFormProps> = ({ initaildata, usergroup }) => {
+
+    let matchedGroup = usergroup.find(group => group.id === initaildata.groupId);
 
     const [loading, setLoading] = useState(false);
-    const [emailHtml, setEmailHtml] = useState({});
+    const [emailHtml, setEmailHtml] = useState('');
     const router = useRouter()
+    const params = useParams()
+    
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
+        defaultValues: initaildata ? {
+            name: initaildata.name || '',
+            group: matchedGroup.name || '',
+        } : {
             name: '',
-            group: '',
+            group:'general'
         }
     });
 
@@ -70,8 +78,15 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
         }
     ]);
 
-    
-
+    useEffect(() => {
+        setDateRanges([
+            {
+                startDate: initaildata.startDate,
+                endDate: initaildata?.endDate,
+                key: "selection"
+            }
+        ])
+    }, [initaildata])
     interface objProps {
         name: string;
         group: string;
@@ -94,13 +109,9 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
         obj.endDate = dateRanges[0]?.endDate;
         obj.design = emailHtml
 
-        console.log(dateRanges)
-
-        console.log(obj)
-
         try {
-            const response = await axios.post('/api/campaign', obj);
-            toast.success("Campaign Created")
+            const response = await axios.patch(`/api/campaign/${params.data}`, obj);
+            toast.success("Campaign Updated")
             form.reset();
             setDateRanges([
                 {
@@ -162,6 +173,8 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
 
     const onReady: EmailEditorProps['onReady'] = (unlayer) => {
         console.log('onReady', unlayer);
+        unlayer.loadDesign(initaildata.design);
+
     };
 
 
@@ -230,6 +243,7 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
                     />
 
                     <EmailEditor ref={emailEditorRef} onReady={onReady} />
+                    {/* <div dangerouslySetInnerHTML={{ __html: initaildata.html }} /> */}
 
                 </div>
                 <Button disabled={loading} className="ml-auto" type="submit">
@@ -248,5 +262,5 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
     )
 }
 
-export default CampaignForm
+export default CampaignListForm
 

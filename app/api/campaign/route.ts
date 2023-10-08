@@ -9,7 +9,7 @@ export async function POST(
     try {
         
         const body = await req.json();
-        const { name, group, startDate,endDate,html } = body;
+        const { name, group, startDate,endDate,design } = body;
 
         const user = await getCurrentUser();
 
@@ -21,7 +21,7 @@ export async function POST(
         
         const groupId = groupData[0].id;
         const userId = user?.id;
-        console.log(name, groupId, startDate,endDate,html,userId)
+        console.log(name, groupId, startDate,endDate,design,userId)
         if (!name) {
             return new NextResponse("name field is required", { status: 400 });
         }
@@ -37,8 +37,8 @@ export async function POST(
             return new NextResponse("endDate field is required", { status: 400 });
         }
 
-        if (!html) {
-            return new NextResponse("html field is required", { status: 400 });
+        if (!design) {
+            return new NextResponse("design field is required", { status: 400 });
         }
 
         if (!userId) {
@@ -51,7 +51,7 @@ export async function POST(
                 groupId,
                 startDate,
                 endDate,
-                html,
+                design,
                 userId
             }]
         })
