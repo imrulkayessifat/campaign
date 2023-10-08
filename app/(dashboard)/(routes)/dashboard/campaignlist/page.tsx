@@ -8,6 +8,7 @@ const CampaignListPage = async () => {
     console.log(data);
     return (
         <div className='h-full p-14 space-y-4'>
+            
             <CampaignList data={data} />
         </div>
     )

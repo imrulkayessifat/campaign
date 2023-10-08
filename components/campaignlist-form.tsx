@@ -23,6 +23,7 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
+import { Heading } from '@/components/ui/heading';
 import {
     Select,
     SelectContent,
@@ -34,7 +35,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Campaign, UserGroup } from '@prisma/client';
 import { Button } from '@/components/ui/button';
-import { useParams,useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { MoveLeft } from 'lucide-react';
+import { Separator } from './ui/separator';
 
 const formSchema = z.object({
     name: z.string(),
@@ -56,7 +59,7 @@ const CampaignListForm: React.FC<CampaignListFormProps> = ({ initaildata, usergr
     const [emailHtml, setEmailHtml] = useState('');
     const router = useRouter()
     const params = useParams()
-    
+
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -65,7 +68,7 @@ const CampaignListForm: React.FC<CampaignListFormProps> = ({ initaildata, usergr
             group: matchedGroup.name || '',
         } : {
             name: '',
-            group:'general'
+            group: 'general'
         }
     });
 
@@ -179,86 +182,104 @@ const CampaignListForm: React.FC<CampaignListFormProps> = ({ initaildata, usergr
 
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
-                <div className="grid md:grid-cols-1 grid-cols-1 gap-8">
+        <>
+            <div className="flex items-center justify-between">
+                <Heading
+                    title="Campaign"
+                    description="Update Campaign"
+                />
+                <Button
+                    disabled={loading}
+                    variant="outline"
+                    size="icon"
+                    onClick={() => router.push('/dashboard/campaignlist')}
+                >
+                    <MoveLeft className="h-5 w-5" />
+                </Button>
+            </div>
+            <Separator />
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+                    <div className="grid md:grid-cols-1 grid-cols-1 gap-8">
 
-                    <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Name</FormLabel>
-                                <FormControl>
-                                    <Input type="text" disabled={loading} placeholder="Name" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Name</FormLabel>
+                                    <FormControl>
+                                        <Input type="text" disabled={loading} placeholder="Name" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        control={form.control}
-                        name="group"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Group</FormLabel>
-                                <FormControl>
-                                    <Select onValueChange={field.onChange} disabled={loading} {...field}>
-                                        <SelectTrigger className="w-[180px]">
-                                            <SelectValue placeholder="Select" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                {usergroup?.map((v: UserGroup, k: number) => {
-                                                    return (
-                                                        <SelectItem key={k} value={v.name}>{v.name}</SelectItem>
-                                                    )
-                                                })}
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
+                        <FormField
+                            control={form.control}
+                            name="group"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Group</FormLabel>
+                                    <FormControl>
+                                        <Select onValueChange={field.onChange} disabled={loading} {...field}>
+                                            <SelectTrigger className="w-[180px]">
+                                                <SelectValue placeholder="Select" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    {usergroup?.map((v: UserGroup, k: number) => {
+                                                        return (
+                                                            <SelectItem key={k} value={v.name}>{v.name}</SelectItem>
+                                                        )
+                                                    })}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
 
-                        )}
-                    />
+                            )}
+                        />
 
-                    <Controller
-                        name="date-ranges"
-                        control={form.control}
-                        render={({ field }) => (
-                            <DateRange
-                                {...field}
-                                editableDateInputs={true}
-                                onChange={(item) => {
-                                    setDateRanges([item.selection]);
-                                    field.onChange(item);
-                                }}
-                                moveRangeOnFirstSelection={false}
-                                ranges={dateRanges}
-                            />
-                        )}
-                    />
+                        <Controller
+                            name="date-ranges"
+                            control={form.control}
+                            render={({ field }) => (
+                                <DateRange
+                                    {...field}
+                                    editableDateInputs={true}
+                                    onChange={(item) => {
+                                        setDateRanges([item.selection]);
+                                        field.onChange(item);
+                                    }}
+                                    moveRangeOnFirstSelection={false}
+                                    ranges={dateRanges}
+                                />
+                            )}
+                        />
 
-                    <EmailEditor ref={emailEditorRef} onReady={onReady} />
-                    {/* <div dangerouslySetInnerHTML={{ __html: initaildata.html }} /> */}
+                        <EmailEditor ref={emailEditorRef} onReady={onReady} />
+                        {/* <div dangerouslySetInnerHTML={{ __html: initaildata.html }} /> */}
+
+                    </div>
+                    <Button disabled={loading} className="ml-auto" type="submit">
+                        Submit
+                    </Button>
+                </form>
+                <div className='flex items-center justify-between'>
+                    <Button variant="outline" onClick={togglePreview}>
+                        {preview ? 'Hide' : 'Show'} Preview
+                    </Button>
+                    <Button variant="outline" onClick={saveDesign}>Save Design</Button>
+                    {/* <Button variant="outline" onClick={exportHtml}>Export HTML</Button> */}
 
                 </div>
-                <Button disabled={loading} className="ml-auto" type="submit">
-                    Submit
-                </Button>
-            </form>
-            <div className='flex items-center justify-between'>
-                <Button variant="outline" onClick={togglePreview}>
-                    {preview ? 'Hide' : 'Show'} Preview
-                </Button>
-                <Button variant="outline" onClick={saveDesign}>Save Design</Button>
-                {/* <Button variant="outline" onClick={exportHtml}>Export HTML</Button> */}
+            </Form>
+        </>
 
-            </div>
-        </Form>
     )
 }
 

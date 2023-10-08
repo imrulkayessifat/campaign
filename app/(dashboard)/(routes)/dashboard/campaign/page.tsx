@@ -2,14 +2,19 @@
 
 import prismadb from "@/lib/prismadb";
 import CampaignForm from "@/components/campaign-form";
+import { Heading } from "@/components/ui/heading";
 
-const CampaignPage =async () => {
+const CampaignPage = async () => {
 
-  const usergroup =await prismadb.userGroup.findMany()
+  const usergroup = await prismadb.userGroup.findMany()
 
   return (
     <div className='h-full p-14 space-y-4'>
-      <CampaignForm usergroup={usergroup}/>
+      <Heading
+        title="Campaign "
+        description="Campaign Create"
+      />
+      <CampaignForm usergroup={usergroup} />
     </div>
   )
 }
