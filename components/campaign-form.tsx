@@ -68,32 +68,40 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
         }
     ]);
 
+    console.log(emailHtml)
     interface objProps {
-        name:string;
-        group:string;
-        startDate:Date;
-        endDate:null;
-        html:string;
+        name: string;
+        group: string;
+        startDate: Date;
+        endDate: null;
+        html: string;
     }
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        let obj:objProps = {
-            name:'',
-            group:'',
-            html:'',
-            startDate:new Date(),
-            endDate:null
+        let obj: objProps = {
+            name: '',
+            group: '',
+            html: '',
+            startDate: new Date(),
+            endDate: null
         }
         obj.name = values?.name;
         obj.group = values?.group;
         obj.startDate = dateRanges[0]?.startDate;
         obj.endDate = dateRanges[0]?.endDate;
         obj.html = emailHtml
-        
+
         try {
             const response = await axios.post('/api/campaign', obj);
             toast.success("Campaign Created")
             form.reset();
+            setDateRanges([
+                {
+                    startDate: new Date(),
+                    endDate: null,
+                    key: "selection"
+                }
+            ])
             router.refresh();
         } catch (error) {
             toast.error('Something went wrong');

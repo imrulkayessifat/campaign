@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from "next/link";
 import Image from "next/image";
 import { Montserrat } from 'next/font/google'
-import { Users,User2,LayoutDashboard, Settings } from "lucide-react";
+import { Users,User2,LayoutDashboard, Settings, Tent } from "lucide-react";
 import {TbBrandCampaignmonitor} from "react-icons/tb"
 import { usePathname } from "next/navigation";
 
@@ -37,12 +37,12 @@ const routes = [
     color: "text-orange-700",
     href: '/dashboard/campaign',
   },
-  // {
-  //   label: 'Campaign List',
-  //   icon: Tent,
-  //   color: "text-emerald-500",
-  //   href: '/dashboard/campain',
-  // },
+  {
+    label: 'Campaign List',
+    icon: Tent,
+    color: "text-emerald-500",
+    href: '/dashboard/campaignlist',
+  },
   // {
   //   label: 'Users',
   //   icon: Contact,
