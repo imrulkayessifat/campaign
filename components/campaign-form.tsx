@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, SetStateAction } from 'react'
+import { useState, useRef, SetStateAction, useEffect } from 'react'
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, Controller } from "react-hook-form";
@@ -32,7 +32,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Input } from '@/components/ui/input';
-import { UserGroup } from '@prisma/client';
+import { Campaign, UserGroup } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 
@@ -43,14 +43,15 @@ const formSchema = z.object({
 });
 
 interface CampaignProps {
-    usergroup: UserGroup
+
+    usergroup: UserGroup[] | null;
 }
 
 const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
 
     const [loading, setLoading] = useState(false);
     const [emailHtml, setEmailHtml] = useState('');
-    const router = useRouter();
+    const router = useRouter()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -60,6 +61,7 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
         }
     });
 
+
     const [dateRanges, setDateRanges] = useState([
         {
             startDate: new Date(),
@@ -68,7 +70,6 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
         }
     ]);
 
-    console.log(emailHtml)
     interface objProps {
         name: string;
         group: string;

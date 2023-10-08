@@ -37,7 +37,6 @@ export async function DELETE(
     req: Request,
     { params }: { params: { data: string } }
 ) {
-    console.log(params)
     try {
         const campaign = await prismadb.campaign.delete({
             where: {

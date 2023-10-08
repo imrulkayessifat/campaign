@@ -74,7 +74,7 @@ export const CampaignCellAction: React.FC<CellActionProps> = ({
             <Copy className="mr-2 h-4 w-4" /> Copy Id
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/usergroup/${data.id}`)}
+            onClick={() => router.push(`/dashboard/campaignlist/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>
