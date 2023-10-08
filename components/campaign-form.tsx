@@ -94,9 +94,7 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
         obj.endDate = dateRanges[0]?.endDate;
         obj.design = emailHtml
 
-        console.log(dateRanges)
-
-        console.log(obj)
+        const unlayer = emailEditorRef.current?.editor;
 
         try {
             const response = await axios.post('/api/campaign', obj);
@@ -109,6 +107,16 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
                     key: "selection"
                 }
             ])
+            unlayer.loadDesign({
+                counters: undefined,
+                body: {
+                    id: undefined,
+                    rows: [],
+                    headers: [],
+                    footers: [],
+                    values: undefined
+                }
+            });
             router.refresh();
         } catch (error) {
             toast.error('Something went wrong');
