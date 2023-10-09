@@ -28,6 +28,7 @@ const HomePage = async () => {
         />
         <Separator />
         <AdminCampaign data={campaign} />
+        <Separator />
       </div>
     </div>
   );

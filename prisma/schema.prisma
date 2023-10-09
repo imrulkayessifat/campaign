@@ -24,6 +24,7 @@ model User {
   accounts        Account[]
   usergroup       UserGroup[]
   campaign        Campaign[]
+  notification    Notification[]
   role            Role      @default(USER) 
 }
 
@@ -37,6 +38,21 @@ enum Approval {
   APPROVE
 }
 model Campaign {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  design             Json
+  userId             String   @db.ObjectId
+  groupId            String   @db.ObjectId
+  startDate          DateTime
+  endDate            DateTime
+  state              Approval @default(PENDING)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group UserGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  
+}
+
+model Notification {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   name               String
   design             Json
@@ -77,5 +93,6 @@ model UserGroup {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   campaign Campaign[]
+  notification    Notification[]
 
 }
