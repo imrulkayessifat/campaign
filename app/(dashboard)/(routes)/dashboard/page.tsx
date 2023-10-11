@@ -8,10 +8,8 @@ import prismadb from "@/lib/prismadb";
 
 const HomePage = async () => {
   
-
   const campaign = await prismadb.campaign.findMany();
   const notification = await prismadb.notification.findMany()
-  console.log(campaign)
 
   return (
     <div>

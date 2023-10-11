@@ -5,7 +5,6 @@ import NotificationList from '@/components/notification-list'
 
 const NotificationListPage = async () => {
     const data = await prismadb.notification.findMany()
-    console.log(data);
     return (
         <div className='h-full p-14 space-y-4'>
             <NotificationList data={data} />

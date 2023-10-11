@@ -1,50 +1,18 @@
 "use client";
 
 import React from 'react'
-import { Plus,ArrowDownUp } from 'lucide-react'
-import { ColumnDef } from "@tanstack/react-table"
+import { Plus } from 'lucide-react'
 
 import { Heading } from '@/components/ui/heading'
 import { Button } from '@/components/ui/button'
 import { Separator } from "@/components/ui/separator";
 import { useUserGroupModal } from '@/hooks/useUserGroupModal';
 import DataTable from '@/components/ui/datatable';
-import { UserGroupCellAction } from '@/components/groupcell-action';
-
-export interface UserGroupColumnProps {
-    id: string;
-    userId: string;
-    name:string;
-}
+import { UserGroupColumnProps,usergroupcolumns } from '@/components/col/user-group-columns';
 
 interface UserGroupListProps {
     data: UserGroupColumnProps[]
 }
-
-const columns: ColumnDef<UserGroupListProps,any>[] = [
-    {
-        accessorKey:"id",
-        header: "Id"
-    },
-    {
-        accessorKey: "name",
-        header: ({ column }) => {
-            return (
-              <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              >
-                Name
-                <ArrowDownUp className="ml-2 h-4 w-4" />
-              </Button>
-            )
-          },
-    },
-    {
-        id: "actions",
-        cell: ({ row }) => <UserGroupCellAction data={row.original} />
-    },
-];
 
 const UserGroupList: React.FC<UserGroupListProps> = ({
     data
@@ -59,7 +27,7 @@ const UserGroupList: React.FC<UserGroupListProps> = ({
                 </Button>
             </div>
             <Separator />
-            <DataTable columns={columns} data={data} searchKey="name" />
+            <DataTable columns={usergroupcolumns} data={data} searchKey="name" />
         </>
     )
 }

@@ -49,8 +49,6 @@ const AdminCampaignForm: React.FC<AdminCampaignFormProps> = ({
     const params = useParams()
     const router = useRouter()
 
-    console.log(initialdata)
-
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 

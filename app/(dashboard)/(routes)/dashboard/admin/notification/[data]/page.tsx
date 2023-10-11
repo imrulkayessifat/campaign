@@ -14,9 +14,6 @@ const AdminNotificationUpdate = async ({
         }
     });
 
-
-    console.log(notification)
-
     return (
         <div className="h-full p-14 space-y-4">
             <AdminNotificationForm initialdata={notification} />

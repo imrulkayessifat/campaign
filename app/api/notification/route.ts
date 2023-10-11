@@ -21,7 +21,7 @@ export async function POST(
         
         const groupId = groupData[0].id;
         const userId = user?.id;
-        console.log(name, groupId, startDate,endDate,design,userId)
+       
         if (!name) {
             return new NextResponse("name field is required", { status: 400 });
         }

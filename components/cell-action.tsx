@@ -15,21 +15,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";
-
-interface AdministratorColumnProps {
-  id: string;
-  name: string | null;
-  email: string | null;
-  emailVerified: Date | null;
-  image: string | null;
-  hashedPassword: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-  userGroupName: string | null;
-  role: "ADMIN" | "USER"
-}
-
-
+import { AdministratorColumnProps } from "@/components/col/administrator-columns";
 
 interface CellActionProps {
   data: AdministratorColumnProps;
@@ -49,7 +35,6 @@ export const CellAction: React.FC<CellActionProps> = ({
       try {
         setLoading(true);
         const res = await axios.delete(`/api/users/${data.id}`);
-        console.log(res)
         toast.success('User deleted.');
         setLoading(false)
         router.refresh();

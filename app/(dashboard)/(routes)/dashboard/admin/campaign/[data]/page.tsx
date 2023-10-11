@@ -14,9 +14,6 @@ const AdminCampaignUpdate = async ({
         }
     });
 
-
-    console.log(campaign)
-
     return (
         <div className="h-full p-14 space-y-4">
             <AdminCampaignForm initialdata={campaign} />

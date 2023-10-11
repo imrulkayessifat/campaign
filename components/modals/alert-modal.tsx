@@ -22,7 +22,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
 
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+  }, [isMounted]);
 
   if (!isMounted) {
     return null;

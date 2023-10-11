@@ -17,8 +17,6 @@ const NotificationUpdate = async ({
 
     const usergroup = await prismadb.userGroup.findMany()
 
-    console.log(notification)
-
     return (
         <div className="h-full p-14 space-y-4">
             <NotificationListForm initaildata={notification} usergroup={usergroup} />

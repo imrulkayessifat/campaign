@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { CampaignColumnProps } from "@/components/campaign-list";
+import { CampaignColumnProps } from "@/components/col/campaign-columns";
 
 interface CellActionProps {
   data: CampaignColumnProps;

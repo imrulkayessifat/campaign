@@ -31,14 +31,14 @@ export const UserGroupCellAction: React.FC<CellActionProps> = ({
 
   const onConfirm = async () => {
     try {
-      
+      setLoading(true)
       await axios.delete(`/api/usergroup/${data.id}`);
       toast.success('User Group deleted.');
       router.refresh();
-      setLoading(false)
+      
     } catch (error) {
       toast.error('Error make in delete operation!');
-      setLoading(false);
+      router.refresh();
     } finally {
       setOpen(false);
       setLoading(false);

@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { AdminCampaignColumnProps } from "./admin-campaign";
+import { AdminCampaignColumnProps } from "@/components/col/admin-campaign-columns";
 interface AdminCellActionProps {
   data: AdminCampaignColumnProps;
 }

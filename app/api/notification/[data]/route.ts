@@ -37,7 +37,7 @@ export async function PATCH(
         })
 
         const groupId = groupData[0].id;
-        console.log(groupId)
+    
         const notification = await prismadb.notification.updateMany({
             where: {
                 id: params?.data

@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { NotificationColumnProps } from "./notification-list";
+import { NotificationColumnProps } from "@/components/col/notification-columns";
 
 interface CellActionProps {
   data: NotificationColumnProps;

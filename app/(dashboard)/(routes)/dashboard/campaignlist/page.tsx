@@ -5,7 +5,6 @@ import CampaignList from '@/components/campaign-list'
 
 const CampaignListPage = async () => {
     const data = await prismadb.campaign.findMany()
-    console.log(data);
     return (
         <div className='h-full p-14 space-y-4'>
             
