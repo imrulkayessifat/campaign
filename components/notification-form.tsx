@@ -5,7 +5,7 @@ import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, Controller } from "react-hook-form";
 import {
-    DateRange,
+    DateRange, Range
 } from 'react-date-range';
 
 import 'react-date-range/dist/styles.css';
@@ -35,6 +35,7 @@ import { Input } from '@/components/ui/input';
 import { Campaign, UserGroup } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import DatePicker from './Calendar';
 
 const formSchema = z.object({
     name: z.string(),
@@ -47,10 +48,20 @@ interface NotificationProps {
     usergroup: UserGroup[] | null;
 }
 
+const initialDateRange = {
+    startDate: new Date(),
+    endDate: new Date(),
+    key: 'selection'
+};
+
 const NotificationForm: React.FC<NotificationProps> = ({ usergroup }) => {
 
     const [loading, setLoading] = useState(false);
-    const [emailHtml, setEmailHtml] = useState({});
+    type JSONType = {
+        [key: string]: string | number | boolean | JSONType | JSONType[];
+    };
+    const [emailHtml, setEmailHtml] = useState<JSONType>({});
+    const [dateRange, setDateRange] = useState<Range>(initialDateRange);
     const router = useRouter()
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -70,14 +81,14 @@ const NotificationForm: React.FC<NotificationProps> = ({ usergroup }) => {
         }
     ]);
 
-    
+
 
     interface objProps {
         name: string;
         group: string;
         startDate: Date;
-        endDate: null;
-        design: JSON;
+        endDate: Date;
+        design: JSONType;
     }
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -86,12 +97,12 @@ const NotificationForm: React.FC<NotificationProps> = ({ usergroup }) => {
             group: '',
             design: {},
             startDate: new Date(),
-            endDate: null
+            endDate: new Date()
         }
         obj.name = values?.name;
         obj.group = values?.group;
-        obj.startDate = dateRanges[0]?.startDate;
-        obj.endDate = dateRanges[0]?.endDate;
+        obj.startDate = dateRange?.startDate!;
+        obj.endDate = dateRange?.endDate!;
         obj.design = emailHtml
 
         const unlayer = emailEditorRef.current?.editor;
@@ -100,21 +111,24 @@ const NotificationForm: React.FC<NotificationProps> = ({ usergroup }) => {
             const response = await axios.post('/api/notification', obj);
             toast.success("Notification Campaign Created")
             form.reset();
-            setDateRanges([
+            setDateRange(
                 {
                     startDate: new Date(),
-                    endDate: null,
-                    key: "selection"
+                    endDate: new Date(),
+                    key: 'selection'
                 }
-            ])
-            unlayer.loadDesign({
-                counters: undefined,
+            )
+            unlayer?.loadDesign({
+                counters: {
+                    u_column: 0,
+                    u_row: 0,
+                },
                 body: {
                     id: undefined,
                     rows: [],
                     headers: [],
                     footers: [],
-                    values: undefined
+                    values: {}
                 }
             });
             router.refresh();
@@ -130,18 +144,8 @@ const NotificationForm: React.FC<NotificationProps> = ({ usergroup }) => {
     const saveDesign = () => {
         const unlayer = emailEditorRef.current?.editor;
 
-        unlayer?.saveDesign((design: SetStateAction<string>) => {
+        unlayer?.saveDesign((design: SetStateAction<JSONType>) => {
             setEmailHtml(design);
-
-        });
-    };
-
-    const exportHtml = () => {
-        const unlayer = emailEditorRef.current?.editor;
-
-        unlayer?.exportHtml((data) => {
-            const { design, html } = data;
-            setEmailHtml(html);
 
         });
     };
@@ -220,7 +224,7 @@ const NotificationForm: React.FC<NotificationProps> = ({ usergroup }) => {
                         )}
                     />
 
-                    <Controller
+                    {/* <Controller
                         name="date-ranges"
                         control={form.control}
                         render={({ field }) => (
@@ -235,6 +239,13 @@ const NotificationForm: React.FC<NotificationProps> = ({ usergroup }) => {
                                 ranges={dateRanges}
                             />
                         )}
+                    /> */}
+
+                    <DatePicker
+                        value={dateRange}
+
+                        onChange={(value) =>
+                            setDateRange(value.selection)}
                     />
 
                     <EmailEditor ref={emailEditorRef} onReady={onReady} />

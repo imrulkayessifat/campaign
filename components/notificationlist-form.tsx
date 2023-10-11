@@ -5,7 +5,7 @@ import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, Controller } from "react-hook-form";
 import {
-    DateRange,
+    DateRange, Range
 } from 'react-date-range';
 
 import 'react-date-range/dist/styles.css';
@@ -38,6 +38,7 @@ import { Button } from '@/components/ui/button';
 import { useParams, useRouter } from 'next/navigation';
 import { MoveLeft } from 'lucide-react';
 import { Separator } from './ui/separator';
+import DatePicker from './Calendar';
 
 const formSchema = z.object({
     name: z.string(),
@@ -51,6 +52,15 @@ interface NotificationListFormProps {
     usergroup: UserGroup[] | null;
 }
 
+const initialDateRange = {
+    startDate: new Date(),
+    endDate: new Date(),
+    key: 'selection'
+};
+type JSONType = {
+    [key: string]: string | number | boolean | JSONType | JSONType[];
+};
+
 const NotificationListForm: React.FC<NotificationListFormProps> = ({ initaildata, usergroup }) => {
 
     let matchedGroup = usergroup?.find(group => group.id === initaildata?.groupId);
@@ -58,7 +68,7 @@ const NotificationListForm: React.FC<NotificationListFormProps> = ({ initaildata
     const [loading, setLoading] = useState(false);
     type JSONType = {
         [key: string]: string | number | boolean | JSONType | JSONType[];
-      };
+    };
     const [emailHtml, setEmailHtml] = useState<JSONType>({});
     const router = useRouter()
     const params = useParams()
@@ -68,14 +78,14 @@ const NotificationListForm: React.FC<NotificationListFormProps> = ({ initaildata
         resolver: zodResolver(formSchema),
         defaultValues: initaildata ? {
             name: initaildata.name || '',
-            group: matchedGroup.name || '',
+            group: matchedGroup?.name || '',
         } : {
             name: '',
             group: 'general'
         }
     });
 
-
+    const [dateRange, setDateRange] = useState<Range>(initialDateRange);
     const [dateRanges, setDateRanges] = useState([
         {
             startDate: new Date(),
@@ -85,19 +95,19 @@ const NotificationListForm: React.FC<NotificationListFormProps> = ({ initaildata
     ]);
 
     useEffect(() => {
-        setDateRanges([
+        setDateRange(
             {
                 startDate: initaildata?.startDate,
                 endDate: initaildata?.endDate,
                 key: "selection"
             }
-        ])
+        )
     }, [initaildata])
     interface objProps {
         name: string;
         group: string;
         startDate: Date;
-        endDate: null;
+        endDate: Date;
         design: JSONType;
     }
 
@@ -107,12 +117,12 @@ const NotificationListForm: React.FC<NotificationListFormProps> = ({ initaildata
             group: '',
             design: {},
             startDate: new Date(),
-            endDate: null
+            endDate: new Date()
         }
         obj.name = values?.name;
         obj.group = values?.group;
-        obj.startDate = dateRanges[0]?.startDate;
-        obj.endDate = dateRanges[0]?.endDate;
+        obj.startDate = dateRange?.startDate!;
+        obj.endDate = dateRange?.endDate!;
         obj.design = emailHtml
 
         try {
@@ -139,18 +149,8 @@ const NotificationListForm: React.FC<NotificationListFormProps> = ({ initaildata
     const saveDesign = () => {
         const unlayer = emailEditorRef.current?.editor;
 
-        unlayer?.saveDesign((design: SetStateAction<string>) => {
+        unlayer?.saveDesign((design: SetStateAction<JSONType>) => {
             setEmailHtml(design);
-
-        });
-    };
-
-    const exportHtml = () => {
-        const unlayer = emailEditorRef.current?.editor;
-
-        unlayer?.exportHtml((data) => {
-            const { design, html } = data;
-            setEmailHtml(html);
 
         });
     };
@@ -177,10 +177,147 @@ const NotificationListForm: React.FC<NotificationListFormProps> = ({ initaildata
     //     unlayer.loadDesign(sample);
     // };
 
+    type JSONTemplate = {
+        counters: {
+            u_column: number;
+            u_row: number;
+            u_content_divider: number;
+            u_content_button: number;
+        };
+        body: {
+            id: string;
+            rows: {
+                id: string;
+                cells: number[];
+                columns: {
+                    id: string;
+                    contents: {
+                        id: string;
+                        type: string;
+                        values: {
+                            // Properties of the "divider" type
+                            width: string;
+                            border: {
+                                borderTopWidth: string;
+                                borderTopStyle: string;
+                                borderTopColor: string;
+                            };
+                            textAlign: string;
+                            containerPadding: string;
+                            anchor: string;
+                            hideDesktop: boolean;
+                            displayCondition: null | any; // Replace 'any' with the correct type
+                            _meta: {
+                                htmlID: string;
+                                htmlClassNames: string;
+                            };
+                            selectable: boolean;
+                            draggable: boolean;
+                            duplicatable: boolean;
+                            deletable: boolean;
+                            hideable: boolean;
+                        };
+                        // values: {
+                        //   // Add properties specific to 'columns' here
+                        // };
+                    }[];
+                    values: {
+                        // Add properties specific to 'columns' here
+                    };
+                }[];
+                values: {
+                    displayCondition: null | any; // Replace 'any' with the correct type
+                    columns: boolean;
+                    backgroundColor: string;
+                    columnsBackgroundColor: string;
+                    backgroundImage: {
+                        url: string;
+                        fullWidth: boolean;
+                        repeat: string;
+                        size: string;
+                        position: string;
+                    };
+                    padding: string;
+                    anchor: string;
+                    hideDesktop: boolean;
+                    _meta: {
+                        htmlID: string;
+                        htmlClassNames: string;
+                    };
+                    selectable: boolean;
+                    draggable: boolean;
+                    duplicatable: boolean;
+                    deletable: boolean;
+                    hideable: boolean;
+                };
+            }[];
+            headers: any[]; // Replace 'any' with the correct type
+            footers: any[]; // Replace 'any' with the correct type
+            values: {
+                popupPosition: string;
+                popupWidth: string;
+                popupHeight: string;
+                borderRadius: string;
+                contentAlign: string;
+                contentVerticalAlign: string;
+                contentWidth: string;
+                fontFamily: {
+                    label: string;
+                    value: string;
+                };
+                textColor: string;
+                popupBackgroundColor: string;
+                popupBackgroundImage: {
+                    url: string;
+                    fullWidth: boolean;
+                    repeat: string;
+                    size: string;
+                    position: string;
+                };
+                popupOverlay_backgroundColor: string;
+                popupCloseButton_position: string;
+                popupCloseButton_backgroundColor: string;
+                popupCloseButton_iconColor: string;
+                popupCloseButton_borderRadius: string;
+                popupCloseButton_margin: string;
+                popupCloseButton_action: {
+                    name: string;
+                    attrs: {
+                        onClick: string;
+                    };
+                };
+                backgroundColor: string;
+                backgroundImage: {
+                    url: string;
+                    fullWidth: boolean;
+                    repeat: string;
+                    size: string;
+                    position: string;
+                };
+                preheaderText: string;
+                linkStyle: {
+                    body: boolean;
+                    linkColor: string;
+                    linkHoverColor: string;
+                    linkUnderline: boolean;
+                    linkHoverUnderline: boolean;
+                };
+                _meta: {
+                    htmlID: string;
+                    htmlClassNames: string;
+                };
+            };
+        };
+        schemaVersion: number;
+    };
+
+
     const onReady: EmailEditorProps['onReady'] = (unlayer) => {
         console.log('onReady', unlayer);
-        unlayer.loadDesign(initaildata.design);
-
+        if (initaildata?.design !== undefined && initaildata?.design !== null) {
+            const design = initaildata.design as JSONTemplate;
+            unlayer.loadDesign(design);
+        }
     };
 
 
@@ -247,21 +384,11 @@ const NotificationListForm: React.FC<NotificationListFormProps> = ({ initaildata
                             )}
                         />
 
-                        <Controller
-                            name="date-ranges"
-                            control={form.control}
-                            render={({ field }) => (
-                                <DateRange
-                                    {...field}
-                                    editableDateInputs={true}
-                                    onChange={(item) => {
-                                        setDateRanges([item.selection]);
-                                        field.onChange(item);
-                                    }}
-                                    moveRangeOnFirstSelection={false}
-                                    ranges={dateRanges}
-                                />
-                            )}
+                        <DatePicker
+                            value={dateRange}
+
+                            onChange={(value) =>
+                                setDateRange(value.selection)}
                         />
 
                         <EmailEditor ref={emailEditorRef} onReady={onReady} />
