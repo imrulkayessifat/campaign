@@ -53,10 +53,13 @@ interface NotificationListFormProps {
 
 const NotificationListForm: React.FC<NotificationListFormProps> = ({ initaildata, usergroup }) => {
 
-    let matchedGroup = usergroup.find(group => group.id === initaildata.groupId);
+    let matchedGroup = usergroup?.find(group => group.id === initaildata?.groupId);
 
     const [loading, setLoading] = useState(false);
-    const [emailHtml, setEmailHtml] = useState('');
+    type JSONType = {
+        [key: string]: string | number | boolean | JSONType | JSONType[];
+      };
+    const [emailHtml, setEmailHtml] = useState<JSONType>({});
     const router = useRouter()
     const params = useParams()
 
@@ -84,7 +87,7 @@ const NotificationListForm: React.FC<NotificationListFormProps> = ({ initaildata
     useEffect(() => {
         setDateRanges([
             {
-                startDate: initaildata.startDate,
+                startDate: initaildata?.startDate,
                 endDate: initaildata?.endDate,
                 key: "selection"
             }
@@ -95,7 +98,7 @@ const NotificationListForm: React.FC<NotificationListFormProps> = ({ initaildata
         group: string;
         startDate: Date;
         endDate: null;
-        design: JSON;
+        design: JSONType;
     }
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {

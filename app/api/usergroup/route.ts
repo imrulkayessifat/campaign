@@ -9,7 +9,7 @@ export async function POST(
     try {
         const currentUser = await getCurrentUser()
         const body = await req.json();
-        const userId = currentUser?.id;
+        const userId = currentUser?.id || '';
         const { name } = body;
 
         if (!name) {

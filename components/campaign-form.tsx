@@ -5,7 +5,7 @@ import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, Controller } from "react-hook-form";
 import {
-    DateRange,
+    DateRange, Range
 } from 'react-date-range';
 
 import 'react-date-range/dist/styles.css';
@@ -23,6 +23,7 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
+import DatePicker from '@/components/Calendar';
 import {
     Select,
     SelectContent,
@@ -40,6 +41,7 @@ const formSchema = z.object({
     name: z.string(),
     group: z.string(),
 
+
 });
 
 interface CampaignProps {
@@ -47,10 +49,21 @@ interface CampaignProps {
     usergroup: UserGroup[] | null;
 }
 
+const initialDateRange = {
+    startDate: new Date(),
+    endDate: new Date(),
+    key: 'selection'
+};
+
 const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
 
     const [loading, setLoading] = useState(false);
-    const [emailHtml, setEmailHtml] = useState({});
+    type JSONType = {
+        [key: string]: string | number | boolean | JSONType | JSONType[];
+    };
+    const [emailHtml, setEmailHtml] = useState<JSONType>({});
+    const [dateRange, setDateRange] = useState<Range>(initialDateRange);
+    console.log(dateRange)
     const router = useRouter()
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -58,6 +71,7 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
         defaultValues: {
             name: '',
             group: '',
+
         }
     });
 
@@ -70,14 +84,14 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
         }
     ]);
 
-    
+
 
     interface objProps {
         name: string;
         group: string;
         startDate: Date;
-        endDate: null;
-        design: JSON;
+        endDate: Date;
+        design: JSONType;
     }
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -86,12 +100,12 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
             group: '',
             design: {},
             startDate: new Date(),
-            endDate: null
+            endDate: new Date()
         }
         obj.name = values?.name;
         obj.group = values?.group;
-        obj.startDate = dateRanges[0]?.startDate;
-        obj.endDate = dateRanges[0]?.endDate;
+        obj.startDate = dateRange?.startDate!;
+        obj.endDate = dateRange?.endDate!;
         obj.design = emailHtml
 
         const unlayer = emailEditorRef.current?.editor;
@@ -100,21 +114,24 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
             const response = await axios.post('/api/campaign', obj);
             toast.success("Campaign Created")
             form.reset();
-            setDateRanges([
+            setDateRange(
                 {
                     startDate: new Date(),
-                    endDate: null,
-                    key: "selection"
+                    endDate: new Date(),
+                    key: 'selection'
                 }
-            ])
-            unlayer.loadDesign({
-                counters: undefined,
+            )
+            unlayer?.loadDesign({
+                counters: {
+                    u_column: 0,
+                    u_row: 0,
+                },
                 body: {
                     id: undefined,
                     rows: [],
                     headers: [],
                     footers: [],
-                    values: undefined
+                    values: {}
                 }
             });
             router.refresh();
@@ -130,7 +147,7 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
     const saveDesign = () => {
         const unlayer = emailEditorRef.current?.editor;
 
-        unlayer?.saveDesign((design: SetStateAction<string>) => {
+        unlayer?.saveDesign((design: SetStateAction<JSONType>) => {
             setEmailHtml(design);
 
         });
@@ -141,8 +158,7 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
 
         unlayer?.exportHtml((data) => {
             const { design, html } = data;
-            setEmailHtml(html);
-
+            console.log(design, html)
         });
     };
 
@@ -220,8 +236,8 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
                         )}
                     />
 
-                    <Controller
-                        name="date-ranges"
+                    {/* <Controller
+                        name="dateranges"
                         control={form.control}
                         render={({ field }) => (
                             <DateRange
@@ -235,6 +251,13 @@ const CampaignForm: React.FC<CampaignProps> = ({ usergroup }) => {
                                 ranges={dateRanges}
                             />
                         )}
+                    /> */}
+
+                    <DatePicker
+                        value={dateRange}
+
+                        onChange={(value) =>
+                            setDateRange(value.selection)}
                     />
 
                     <EmailEditor ref={emailEditorRef} onReady={onReady} />
