@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { UserGroupColumnProps } from "@/components/usergroup-list";
+import { UserGroupColumnProps } from "@/components/col/user-group-columns";
 
 interface CellActionProps {
   data: UserGroupColumnProps;

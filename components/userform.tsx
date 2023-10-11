@@ -4,7 +4,7 @@ import * as z from "zod"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { MoveLeft } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
@@ -71,23 +71,26 @@ const UserForm: React.FC<UserFormProps> = ({
 
     console.log(data)
     let array2 = initialdata?.userGroupName;
-    let result = data.filter(obj => array2.includes(obj.name));
+    let result = data.filter(obj => array2?.includes(obj.name));
     console.log(result)
-
-    const [selectedValue, setSelectedValue] = useState([]);
-
+    interface MyObject {
+        id: string;
+        name: string;
+      }
+      
+    const [selectedValue, setSelectedValue] = useState<MyObject[]>([]);
+    console.log(selectedValue)
     useEffect(() => {
-
 
         setSelectedValue(result);
     }, [initialdata])
 
-    const onSelect = (selectedList, selectedItem) => {
+    const onSelect = (selectedList:any[]) => {
         console.log(selectedList)
         setSelectedValue(selectedList);
     }
 
-    const onRemove = (selectedList, removedItem) => {
+    const onRemove = (selectedList:any[]) => {
         setSelectedValue(selectedList);
     }
 
@@ -105,22 +108,31 @@ const UserForm: React.FC<UserFormProps> = ({
                 role: 'USER', // You can choose 'USER' or 'ADMIN' as the default role
             },
     })
-
-    const onSubmit = async (values: UserFormValues) => {
-        let userGroupName: any[] = []
-        selectedValue.map((item) => { userGroupName.push(item.name) });
-        values.userGroupName = userGroupName
-        try {
-            setLoading(true)
-            const res = await axios.patch(`/api/users/${params.data}`, values)
-            toast.success("User Updated")
-            router.refresh()
-        } catch (error) {
-            toast.error("ONlY ADMIN CAN UPDATE USER!")
-        } finally {
-            setLoading(false)
-        }
+    type formType = {
+        name: string;
+        email:string;
+        role:"USER" | "ADMIN";
+        userGroupName:string[]
     }
+    const onSubmit: SubmitHandler<UserFormValues> = async (values) => {
+        try {
+            setLoading(true);
+            const userGroupName: string[] = selectedValue.map((item) => item.name);
+            const updatedValues: formType = {
+                ...values,
+                userGroupName,
+            };
+            console.log(updatedValues)
+    
+            const res = await axios.patch(`/api/users/${params.data}`, updatedValues);
+            toast.success("User Updated");
+            router.refresh();
+        } catch (error) {
+            toast.error("ONLY ADMIN CAN UPDATE USER!");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <>
