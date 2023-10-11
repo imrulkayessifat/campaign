@@ -46,6 +46,13 @@ const formSchema = z.object({
 
 type UserFormValues = z.infer<typeof formSchema>
 
+type SubmitForm= {
+    name:string;
+    email:string;
+    role:Role;
+    userGroupName:string[]
+}
+
 interface UserFormProps {
     initialdata: User | null;
     group: UserGroup[] | null;
