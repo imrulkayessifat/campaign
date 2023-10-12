@@ -1,7 +1,8 @@
-import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
+
+import prismadb from "@/lib/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import { group } from "console";
+
 export async function PATCH(
     req: Request,
     { params }: { params: { userid: string } }
@@ -45,7 +46,7 @@ export async function DELETE(
 ) {
     try {
         const currentUser =await getCurrentUser()
-        console.log(currentUser)
+       
         if(currentUser?.role==='USER'){
             return new NextResponse("Only admin can delete a user", { status: 400 })
         }

@@ -13,15 +13,6 @@ import { UserGroup } from "@prisma/client"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import {
     Form,
     FormControl,
     FormField,
@@ -48,7 +39,6 @@ const UserGroupForm: React.FC<UserFormProps> = ({
     const params = useParams()
     const router = useRouter()
 
-    const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const form = useForm<UserGroupFormValues>({

@@ -3,16 +3,17 @@
 import { useState, useRef, SetStateAction, useEffect } from 'react'
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
-    DateRange, Range
+    Range
 } from 'react-date-range';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
 
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 
-import axios from 'axios';
-import toast from 'react-hot-toast';
 
 import {
     Form,
@@ -22,8 +23,6 @@ import {
     FormLabel,
     FormMessage
 } from "@/components/ui/form";
-import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
-
 import { Heading } from '@/components/ui/heading';
 import {
     Select,
@@ -38,8 +37,9 @@ import { Campaign, UserGroup } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { useParams, useRouter } from 'next/navigation';
 import { MoveLeft } from 'lucide-react';
-import { Separator } from './ui/separator';
-import DatePicker from './Calendar';
+import { Separator } from '@/components/ui/separator';
+import DatePicker from '@/components/Calendar';
+import { JSONTemplate } from '@/components/type/template';
 
 const formSchema = z.object({
     name: z.string(),
@@ -82,13 +82,6 @@ const CampaignListForm: React.FC<CampaignListFormProps> = ({ initaildata, usergr
     });
 
     const [dateRange, setDateRange] = useState<Range>(initialDateRange);
-    const [dateRanges, setDateRanges] = useState([
-        {
-            startDate: new Date(),
-            endDate: null,
-            key: "selection"
-        }
-    ]);
 
     useEffect(() => {
         setDateRange(
@@ -167,152 +160,11 @@ const CampaignListForm: React.FC<CampaignListFormProps> = ({ initaildata, usergr
         }
     };
 
-    const onDesignLoad = (data: any) => {
-        console.log('onDesignLoad', data);
-    };
-
-    // const onLoad: EmailEditorProps['onLoad'] = (unlayer) => {
-    //     console.log('onLoad', unlayer);
-    //     unlayer.addEventListener('design:loaded', onDesignLoad);
-    //     unlayer.loadDesign(sample);
-    // };
-    type JSONTemplate = {
-        counters: {
-          u_column: number;
-          u_row: number;
-          u_content_divider: number;
-          u_content_button: number;
-        };
-        body: {
-          id: string;
-          rows: {
-            id: string;
-            cells: number[];
-            columns: {
-              id: string;
-              contents: {
-                id: string;
-                type: string;
-                values: {
-                  // Properties of the "divider" type
-                  width: string;
-                  border: {
-                    borderTopWidth: string;
-                    borderTopStyle: string;
-                    borderTopColor: string;
-                  };
-                  textAlign: string;
-                  containerPadding: string;
-                  anchor: string;
-                  hideDesktop: boolean;
-                  displayCondition: null | any; // Replace 'any' with the correct type
-                  _meta: {
-                    htmlID: string;
-                    htmlClassNames: string;
-                  };
-                  selectable: boolean;
-                  draggable: boolean;
-                  duplicatable: boolean;
-                  deletable: boolean;
-                  hideable: boolean;
-                };
-                // values: {
-                //   // Add properties specific to 'columns' here
-                // };
-              }[];
-              values: {
-                // Add properties specific to 'columns' here
-              };
-            }[];
-            values: {
-              displayCondition: null | any; // Replace 'any' with the correct type
-              columns: boolean;
-              backgroundColor: string;
-              columnsBackgroundColor: string;
-              backgroundImage: {
-                url: string;
-                fullWidth: boolean;
-                repeat: string;
-                size: string;
-                position: string;
-              };
-              padding: string;
-              anchor: string;
-              hideDesktop: boolean;
-              _meta: {
-                htmlID: string;
-                htmlClassNames: string;
-              };
-              selectable: boolean;
-              draggable: boolean;
-              duplicatable: boolean;
-              deletable: boolean;
-              hideable: boolean;
-            };
-          }[];
-          headers: any[]; // Replace 'any' with the correct type
-          footers: any[]; // Replace 'any' with the correct type
-          values: {
-            popupPosition: string;
-            popupWidth: string;
-            popupHeight: string;
-            borderRadius: string;
-            contentAlign: string;
-            contentVerticalAlign: string;
-            contentWidth: string;
-            fontFamily: {
-              label: string;
-              value: string;
-            };
-            textColor: string;
-            popupBackgroundColor: string;
-            popupBackgroundImage: {
-              url: string;
-              fullWidth: boolean;
-              repeat: string;
-              size: string;
-              position: string;
-            };
-            popupOverlay_backgroundColor: string;
-            popupCloseButton_position: string;
-            popupCloseButton_backgroundColor: string;
-            popupCloseButton_iconColor: string;
-            popupCloseButton_borderRadius: string;
-            popupCloseButton_margin: string;
-            popupCloseButton_action: {
-              name: string;
-              attrs: {
-                onClick: string;
-              };
-            };
-            backgroundColor: string;
-            backgroundImage: {
-              url: string;
-              fullWidth: boolean;
-              repeat: string;
-              size: string;
-              position: string;
-            };
-            preheaderText: string;
-            linkStyle: {
-              body: boolean;
-              linkColor: string;
-              linkHoverColor: string;
-              linkUnderline: boolean;
-              linkHoverUnderline: boolean;
-            };
-            _meta: {
-              htmlID: string;
-              htmlClassNames: string;
-            };
-          };
-        };
-        schemaVersion: number;
-      };
+    
       
       
     const onReady: EmailEditorProps['onReady'] = (unlayer) => {
-        console.log('onReady', unlayer);
+
         if (initaildata?.design !== undefined && initaildata?.design !== null) {
             const design = initaildata.design as JSONTemplate;
             unlayer.loadDesign(design);

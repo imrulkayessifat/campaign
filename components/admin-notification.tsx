@@ -1,13 +1,7 @@
 "use client";
 
-import React from 'react'
-
-
 import DataTable from '@/components/ui/datatable';
 import { adminnotificationcolumns,AdminNotificationColumnProps } from '@/components/col/admin-notification-columns';
-
-
-
 
 interface AdminNotificationListProps {
     data: AdminNotificationColumnProps[]

@@ -1,7 +1,6 @@
 import prismadb from "@/lib/prismadb";
 
 import CampaignListForm from "@/components/campaignlist-form";
-import { Heading } from "@/components/ui/heading";
 
 const CampaignUpdate = async ({
     params

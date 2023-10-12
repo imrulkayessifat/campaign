@@ -13,6 +13,7 @@ const AdministratorUpdate = async ({
             id: params.data
         }
     });
+    
     const group = await prismadb.userGroup.findMany();
 
     return (

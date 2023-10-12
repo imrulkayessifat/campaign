@@ -1,5 +1,6 @@
 import prismadb from '@/lib/prismadb'
 import React from 'react'
+
 import getCurrentUser from '@/app/actions/getCurrentUser'
 import AdministratorList from '@/components/administrator-list'
 

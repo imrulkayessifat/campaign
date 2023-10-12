@@ -1,5 +1,4 @@
 import prismadb from "@/lib/prismadb";
-
 import UserGroupForm from "@/components/usergroupform";
 
 const UserGroupUpdate = async ({

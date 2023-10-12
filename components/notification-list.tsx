@@ -1,19 +1,12 @@
 "use client";
 
-import React from 'react'
-
 import { Heading } from '@/components/ui/heading'
 import { Separator } from "@/components/ui/separator";
 import DataTable from '@/components/ui/datatable';
 import { NotificationColumnProps,notificationcolumns } from '@/components/col/notification-columns';
-
-
-
 interface CampaignListProps {
     data: NotificationColumnProps[]
 }
-
-
 
 const NotificationList: React.FC<CampaignListProps> = ({
     data

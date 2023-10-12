@@ -1,5 +1,3 @@
-
-
 import prismadb from "@/lib/prismadb";
 import NotificationForm from "@/components/notification-form";
 import { Heading } from "@/components/ui/heading";

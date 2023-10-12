@@ -17,7 +17,6 @@ import { Separator } from "@/components/ui/separator";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -71,7 +70,7 @@ export const LoginModal = () => {
     }
   };
 
-  const handleSubmit =async () => {
+  const handleSubmit = async () => {
     try {
       const res = await signIn('github', {
         callbackUrl,
@@ -89,7 +88,7 @@ export const LoginModal = () => {
     }
   }
 
-  const abide =async () => {
+  const abide = async () => {
     try {
       const res = await signIn('google', {
         callbackUrl,

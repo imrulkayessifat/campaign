@@ -1,6 +1,5 @@
 "use client";
 
-import { Approval } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowDownUp } from "lucide-react";
 

@@ -1,18 +1,19 @@
 "use client"
 
-import { useState, useRef, SetStateAction, useEffect } from 'react'
+import { useState, useRef, SetStateAction } from 'react'
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
-    DateRange, Range
+    Range
 } from 'react-date-range';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
 
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 
-import axios from 'axios';
-import toast from 'react-hot-toast';
 
 import {
     Form,
@@ -22,7 +23,6 @@ import {
     FormLabel,
     FormMessage
 } from "@/components/ui/form";
-import EmailEditor, { EditorRef, EmailEditorProps } from 'react-email-editor';
 import {
     Select,
     SelectContent,
@@ -32,7 +32,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Input } from '@/components/ui/input';
-import { Campaign, UserGroup } from '@prisma/client';
+import { UserGroup } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import DatePicker from './Calendar';
@@ -44,7 +44,6 @@ const formSchema = z.object({
 });
 
 interface NotificationProps {
-
     usergroup: UserGroup[] | null;
 }
 
@@ -71,17 +70,6 @@ const NotificationForm: React.FC<NotificationProps> = ({ usergroup }) => {
             group: '',
         }
     });
-
-
-    const [dateRanges, setDateRanges] = useState([
-        {
-            startDate: new Date(),
-            endDate: null,
-            key: "selection"
-        }
-    ]);
-
-
 
     interface objProps {
         name: string;
@@ -162,18 +150,7 @@ const NotificationForm: React.FC<NotificationProps> = ({ usergroup }) => {
         }
     };
 
-    const onDesignLoad = (data: any) => {
-        console.log('onDesignLoad', data);
-    };
-
-    // const onLoad: EmailEditorProps['onLoad'] = (unlayer) => {
-    //     console.log('onLoad', unlayer);
-    //     unlayer.addEventListener('design:loaded', onDesignLoad);
-    //     unlayer.loadDesign(sample);
-    // };
-
     const onReady: EmailEditorProps['onReady'] = (unlayer) => {
-        console.log('onReady', unlayer);
     };
 
 
@@ -224,23 +201,6 @@ const NotificationForm: React.FC<NotificationProps> = ({ usergroup }) => {
                         )}
                     />
 
-                    {/* <Controller
-                        name="date-ranges"
-                        control={form.control}
-                        render={({ field }) => (
-                            <DateRange
-                                {...field}
-                                editableDateInputs={true}
-                                onChange={(item) => {
-                                    setDateRanges([item.selection]);
-                                    field.onChange(item);
-                                }}
-                                moveRangeOnFirstSelection={false}
-                                ranges={dateRanges}
-                            />
-                        )}
-                    /> */}
-
                     <DatePicker
                         value={dateRange}
 
@@ -260,8 +220,6 @@ const NotificationForm: React.FC<NotificationProps> = ({ usergroup }) => {
                     {preview ? 'Hide' : 'Show'} Preview
                 </Button>
                 <Button variant="outline" onClick={saveDesign}>Save Design</Button>
-                {/* <Button variant="outline" onClick={exportHtml}>Export HTML</Button> */}
-
             </div>
         </Form>
     )

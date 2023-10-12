@@ -1,4 +1,3 @@
-import React from 'react'
 import prismadb from '@/lib/prismadb'
 
 import NotificationList from '@/components/notification-list'

@@ -1,5 +1,3 @@
-
-
 import prismadb from "@/lib/prismadb";
 import CampaignForm from "@/components/campaign-form";
 import { Heading } from "@/components/ui/heading";

@@ -1,7 +1,6 @@
 import prismadb from "@/lib/prismadb";
 
 import NotificationListForm from "@/components/notificationlist-form";
-import { Heading } from "@/components/ui/heading";
 
 const NotificationUpdate = async ({
     params

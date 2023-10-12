@@ -1,6 +1,4 @@
 import prismadb from '@/lib/prismadb'
-import React from 'react'
-
 import UserGroupList from '@/components/usergroup-list'
 
 const UserGroupPage = async () => {

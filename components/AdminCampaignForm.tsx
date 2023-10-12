@@ -17,7 +17,6 @@ import {
     SelectContent,
     SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
@@ -48,8 +47,7 @@ const AdminCampaignForm: React.FC<AdminCampaignFormProps> = ({
 }) => {
     const params = useParams()
     const router = useRouter()
-
-    const [open, setOpen] = useState(false);
+    
     const [loading, setLoading] = useState(false);
 
     const form = useForm<UserGroupFormValues>({

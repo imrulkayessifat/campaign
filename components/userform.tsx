@@ -19,7 +19,6 @@ import {
     SelectContent,
     SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
@@ -33,7 +32,7 @@ import {
 } from "@/components/ui/form"
 import { Separator } from "@/components/ui/separator"
 import { Heading } from "@/components/ui/heading"
-import { AiOutlineConsoleSql } from "react-icons/ai"
+
 
 const roles = ["USER", "ADMIN"] as const;
 type Role = typeof roles[number];
@@ -46,13 +45,6 @@ const formSchema = z.object({
 
 type UserFormValues = z.infer<typeof formSchema>
 
-type SubmitForm= {
-    name:string;
-    email:string;
-    role:Role;
-    userGroupName:string[]
-}
-
 interface UserFormProps {
     initialdata: User | null;
     group: UserGroup[] | null;
@@ -64,29 +56,25 @@ const UserForm: React.FC<UserFormProps> = ({
 
     const params = useParams()
     const router = useRouter()
-    const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
     let data = group ? group.map(item => ({ id: item.id, name: item.name })) : [];
 
-    console.log(data)
     let array2 = initialdata?.userGroupName;
     let result = data.filter(obj => array2?.includes(obj.name));
-    console.log(result)
     interface MyObject {
         id: string;
         name: string;
       }
       
     const [selectedValue, setSelectedValue] = useState<MyObject[]>([]);
-    console.log(selectedValue)
+
     useEffect(() => {
 
         setSelectedValue(result);
     }, [initialdata])
 
     const onSelect = (selectedList:any[]) => {
-        console.log(selectedList)
         setSelectedValue(selectedList);
     }
 
@@ -100,12 +88,12 @@ const UserForm: React.FC<UserFormProps> = ({
             ? {
                 email: initialdata.email || '',
                 name: initialdata.name || '',
-                role: initialdata.role || 'USER', // You can choose 'USER' or 'ADMIN' as the default role
+                role: initialdata.role || 'USER', 
             }
             : {
                 email: '',
                 name: '',
-                role: 'USER', // You can choose 'USER' or 'ADMIN' as the default role
+                role: 'USER',
             },
     })
     type formType = {
@@ -122,7 +110,6 @@ const UserForm: React.FC<UserFormProps> = ({
                 ...values,
                 userGroupName,
             };
-            console.log(updatedValues)
     
             const res = await axios.patch(`/api/users/${params.data}`, updatedValues);
             toast.success("User Updated");

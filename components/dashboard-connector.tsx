@@ -1,5 +1,4 @@
 "use client"
-import React from 'react'
 
 import useLoginModal from '@/hooks/useLoginModal'
 import { Button } from '@/components/ui/button'

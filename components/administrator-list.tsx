@@ -1,6 +1,4 @@
-"use client";
-
-import React from 'react'
+"use client"
 
 import { Heading } from '@/components/ui/heading'
 import { Separator } from "@/components/ui/separator";
@@ -15,14 +13,10 @@ interface AdministratorListProps {
 const AdministratorList: React.FC<AdministratorListProps> = ({
     data,
 }) => {
-    const userModal = useUserModal()
     return (
         <>
             <div className='flex items-center justify-between'>
                 <Heading title={`Users (${data.length})`} description="Manage users for your campaign" />
-                {/* <Button onClick={() => userModal.onOpen()}>
-                    <Plus className="mr-2 h-4 w-4" /> Add New
-                </Button> */}
             </div>
             <Separator />
             <DataTable  columns={administratorcolumns} data={data} searchKey="email" />
