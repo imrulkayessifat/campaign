@@ -92,7 +92,10 @@ const NotificationForm: React.FC<NotificationProps> = ({ usergroup }) => {
         obj.startDate = dateRange?.startDate!;
         obj.endDate = dateRange?.endDate!;
         obj.design = emailHtml
-
+        if (Object.keys(obj.design).length === 0) {
+            toast.error('Please save the design!');
+            return;
+        }
         const unlayer = emailEditorRef.current?.editor;
 
         try {
