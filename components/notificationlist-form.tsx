@@ -71,7 +71,6 @@ const NotificationListForm: React.FC<NotificationListFormProps> = ({ initaildata
     const router = useRouter()
     const params = useParams()
 
-
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: initaildata ? {
@@ -115,11 +114,16 @@ const NotificationListForm: React.FC<NotificationListFormProps> = ({ initaildata
         obj.startDate = dateRange?.startDate!;
         obj.endDate = dateRange?.endDate!;
         obj.design = emailHtml
-
+        if (Object.keys(obj.design).length === 0) {
+            toast.error('Please save the design!');
+            return;
+        }
+        setLoading(true)
         try {
+
             const response = await axios.patch(`/api/notification/${params.data}`, obj);
             toast.success("Notification Updated")
-            form.reset();
+            
             setDateRange(
                 {
                     startDate: new Date(),
@@ -127,9 +131,12 @@ const NotificationListForm: React.FC<NotificationListFormProps> = ({ initaildata
                     key: 'selection'
                 }
             )
+
             router.refresh();
+            setLoading(false)
         } catch (error) {
             toast.error('Something went wrong');
+            setLoading(false)
         }
 
     };

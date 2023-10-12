@@ -68,8 +68,10 @@ const CampaignListForm: React.FC<CampaignListFormProps> = ({ initaildata, usergr
     const [loading, setLoading] = useState(false);
     const router = useRouter()
     const params = useParams()
-    
+
     const [emailHtml, setEmailHtml] = useState<JSONType>({});
+    const emailEditorRef = useRef<EditorRef | null>(null);
+    const [preview, setPreview] = useState(false);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: initaildata ? {
@@ -101,6 +103,7 @@ const CampaignListForm: React.FC<CampaignListFormProps> = ({ initaildata, usergr
     }
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        
         let obj: objProps = {
             name: '',
             group: '',
@@ -110,18 +113,22 @@ const CampaignListForm: React.FC<CampaignListFormProps> = ({ initaildata, usergr
         }
         obj.name = values?.name;
         obj.group = values?.group;
-
         if (dateRange?.startDate !== undefined && dateRange?.endDate !== undefined) {
             obj.startDate = dateRange?.startDate;
             obj.endDate = dateRange?.endDate;
         }
 
         obj.design = emailHtml
-
+        if (Object.keys(obj.design).length === 0) {
+            toast.error('Please save the design!');
+            return;
+        }
+        setLoading(true)
+        
         try {
+
             const response = await axios.patch(`/api/campaign/${params.data}`, obj);
             toast.success("Campaign Updated")
-            form.reset();
             setDateRange(
                 {
                     startDate: new Date(),
@@ -130,14 +137,13 @@ const CampaignListForm: React.FC<CampaignListFormProps> = ({ initaildata, usergr
                 }
             )
             router.refresh();
+            setLoading(false)
+
         } catch (error) {
             toast.error('Something went wrong');
         }
 
     };
-
-    const emailEditorRef = useRef<EditorRef | null>(null);
-    const [preview, setPreview] = useState(false);
 
     const saveDesign = () => {
         const unlayer = emailEditorRef.current?.editor;
@@ -160,15 +166,15 @@ const CampaignListForm: React.FC<CampaignListFormProps> = ({ initaildata, usergr
         }
     };
 
-    
-      
-      
+
+
+
     const onReady: EmailEditorProps['onReady'] = (unlayer) => {
 
         if (initaildata?.design !== undefined && initaildata?.design !== null) {
             const design = initaildata.design as JSONTemplate;
             unlayer.loadDesign(design);
-          }
+        }
     };
 
 
@@ -235,22 +241,6 @@ const CampaignListForm: React.FC<CampaignListFormProps> = ({ initaildata, usergr
                             )}
                         />
 
-                        {/* <Controller
-                            name="date-ranges"
-                            control={form.control}
-                            render={({ field }) => (
-                                <DateRange
-                                    {...field}
-                                    editableDateInputs={true}
-                                    onChange={(item) => {
-                                        setDateRanges([item.selection]);
-                                        field.onChange(item);
-                                    }}
-                                    moveRangeOnFirstSelection={false}
-                                    ranges={dateRanges}
-                                />
-                            )}
-                        /> */}
 
                         <DatePicker
                             value={dateRange}
@@ -260,7 +250,7 @@ const CampaignListForm: React.FC<CampaignListFormProps> = ({ initaildata, usergr
                         />
 
                         <EmailEditor ref={emailEditorRef} onReady={onReady} />
-                        {/* <div dangerouslySetInnerHTML={{ __html: initaildata.html }} /> */}
+
 
                     </div>
                     <Button disabled={loading} className="ml-auto" type="submit">
@@ -272,7 +262,6 @@ const CampaignListForm: React.FC<CampaignListFormProps> = ({ initaildata, usergr
                         {preview ? 'Hide' : 'Show'} Preview
                     </Button>
                     <Button variant="outline" onClick={saveDesign}>Save Design</Button>
-                    {/* <Button variant="outline" onClick={exportHtml}>Export HTML</Button> */}
 
                 </div>
             </Form>
