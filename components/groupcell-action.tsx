@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -14,6 +14,7 @@ import {
   DropdownMenuLabel, 
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+
 import { AlertModal } from "@/components/modals/alert-modal";
 import { UserGroupColumnProps } from "@/components/col/user-group-columns";
 
@@ -32,12 +33,11 @@ export const UserGroupCellAction: React.FC<CellActionProps> = ({
     try {
       setLoading(true)
       await axios.delete(`/api/usergroup/${data.id}`);
-      toast.success('User Group deleted.');
       router.refresh();
+      toast.success('User Group deleted.');
       
     } catch (error) {
       toast.error('Error make in delete operation!');
-      router.refresh();
     } finally {
       setOpen(false);
       setLoading(false);
@@ -86,3 +86,4 @@ export const UserGroupCellAction: React.FC<CellActionProps> = ({
     </>
   );
 };
+
