@@ -15,7 +15,7 @@ async function getSession() {
 const LandingPage = async () => { 
   const currentUser = await getCurrentUser();
   console.log(currentUser)
-  if(currentUser?.id) redirect("dashboard")
+  if(currentUser?.id) redirect("/dashboard")
   
   return (
     <div className='flex items-center justify-center h-full'>
